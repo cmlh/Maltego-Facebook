@@ -1,0 +1,5 @@
+=head1 README
+
+The latest stable release(s) are available from http://code.google.com/p/maltego/downloads
+
+Please refer to the https://github.com/cmlh/Maltego-Facebook/wiki for further information.
