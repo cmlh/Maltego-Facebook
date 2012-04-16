@@ -1,0 +1,4 @@
+Group,cmlh.facebook.group,maltego.FacebookObject
+User,cmlh.facebook.user,
+Event,cmlh.facebook.event,maltego.FacebookObject
+UID,cmlh.facebook.user.id,maltego.FacebookObject
