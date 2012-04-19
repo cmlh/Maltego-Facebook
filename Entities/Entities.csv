@@ -1,6 +1,6 @@
 Entities from github.com/cmlh/Maltego-Facebook
 Group,cmlh.facebook.group,maltego.FacebookObject
-User,cmlh.facebook.user,
+User,cmlh.facebook.user,maltego.FacebookObject
 Event,cmlh.facebook.event,maltego.FacebookObject
 UID,cmlh.facebook.user.id,maltego.FacebookObject
 
