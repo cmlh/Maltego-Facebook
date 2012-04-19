@@ -1,4 +1,10 @@
+Entities from github.com/cmlh/Maltego-Facebook
 Group,cmlh.facebook.group,maltego.FacebookObject
 User,cmlh.facebook.user,
 Event,cmlh.facebook.event,maltego.FacebookObject
 UID,cmlh.facebook.user.id,maltego.FacebookObject
+
+Entities from Maltego
+facebookObject, facebook.Object,,http://ctas.paterva.com/TDSTransforms/GraphAPI/facebookObject.mtz
+Affiliation - Facebook,maltego.affiliation.Facebook,maltego.Affiation
+Facebook Object, maltego.FacebookObject
