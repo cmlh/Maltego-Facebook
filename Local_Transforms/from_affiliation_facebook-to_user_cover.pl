@@ -8,9 +8,9 @@ use WWW::Mechanize;
 use Data::Dumper;
 
 # #CONFIGURATION Remove "#" for Smart::Comments
-# use Smart::Comments;
+# Smart::Comments;
 
-my $VERSION = "0.0.3"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0.4"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 # Command line arguments from Maltego
 my $maltego_selected_entity_value = $ARGV[0];
@@ -23,17 +23,8 @@ my $maltego_additional_field_values = $ARGV[1];
 # "###" is for Smart::Comments CPAN Module
 ### \$maltego_additional_field_values is: $maltego_additional_field_values;
 
-my @maltego_additional_field_values =
-  split( '#', $maltego_additional_field_values );
-
-my $facebook_profileid = $maltego_additional_field_values[3];
-
-# Workaround for the "#attachments_internal=x" matelgo additional field
-# REFACTOR @maltego_additional_field_values to a hash based on key"="value of each element
-if ( $facebook_profileid !~ m/uid=/ ) {
-    $facebook_profileid = $maltego_additional_field_values[4];
-}
-$facebook_profileid =~ s/(uid=)//g;
+my %maltego_additional_field_values = split_maltego_additional_fields($maltego_additional_field_values);
+my $facebook_profileid = $maltego_additional_field_values{"uid"};
 
 # "###" is for Smart::Comments CPAN Module
 ### \$facebook_profileid is: $facebook_profileid;
@@ -48,6 +39,8 @@ print("\t</UIMessages>\n");
 
 my $facebook_graphapi_URL =
   "http://graph.facebook.com/$facebook_profileid?fields=cover";
+# "###" is for Smart::Comments CPAN Module
+### \$facebook_graphapi_URL is: $facebook_graphapi_URL;
 
 # Create a new JSON request
 
@@ -99,6 +92,21 @@ print("\t</Entities>\n");
 # http://ctas.paterva.com/view/Specification#Message_Wrapper
 print("</MaltegoTransformResponseMessage>\n");
 print("</MaltegoMessage>\n");
+
+sub split_maltego_additional_fields {
+
+  my $maltego_additional_field_values = $_[0];
+  my @maltego_additional_field_values = split( '#', $maltego_additional_field_values );
+
+  my %maltego_additional_field_values;
+
+  foreach (@maltego_additional_field_values) {
+    my ( $key, $value ) = split( /=/, $_, 2 );
+    $maltego_additional_field_values{"$key"} = "$value";
+  }
+    
+  return %maltego_additional_field_values;
+}
 
 =head1 NAME
 
