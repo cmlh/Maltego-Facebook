@@ -1,4 +1,5 @@
 #!/usr/bin/env perl
+# The above shebang is for "perlbrew", otherwise use /usr/bin/perl or the file path quoted for "which perl"
 #
 # Please refer to the Plain Old Documentation (POD) at the end of this Perl Script for further information
 
@@ -6,11 +7,13 @@ use strict;
 use JSON;
 use WWW::Mechanize;
 use Data::Dumper;
+use Config::Std;
+use URI::Escape;
 
 # #CONFIGURATION Remove "#" for Smart::Comments
-# Smart::Comments;
+# use Smart::Comments;
 
-my $VERSION = "0.0.4"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0.1"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 # Command line arguments from Maltego
 my $maltego_selected_entity_value = $ARGV[0];
@@ -23,11 +26,18 @@ my $maltego_additional_field_values = $ARGV[1];
 # "###" is for Smart::Comments CPAN Module
 ### \$maltego_additional_field_values is: $maltego_additional_field_values;
 
-my %maltego_additional_field_values = split_maltego_additional_fields($maltego_additional_field_values);
-my $facebook_profileid = $maltego_additional_field_values{"uid"};
+my %maltego_additional_field_values =
+  split_maltego_additional_fields($maltego_additional_field_values);
+
+my $facebook_object_id = $maltego_selected_entity_value;
 
 # "###" is for Smart::Comments CPAN Module
-### \$facebook_profileid is: $facebook_profileid;
+### \$facebook_object_id is: $facebook_object_id;
+
+# CONFIGURATION
+# REFACTOR with "easydialogs" e.g. http://www.paterva.com/forum//index.php/topic,134.0.html as recommended by Andrew from Paterva
+read_config './etc/facebook_graphapi.conf' => my %config;
+my $facebook_graphapi_access_token = $config{'GraphAPI'}{'access_token'};
 
 print("<MaltegoMessage>\n");
 print("<MaltegoTransformResponseMessage>\n");
@@ -38,7 +48,8 @@ print(
 print("\t</UIMessages>\n");
 
 my $facebook_graphapi_URL =
-  "http://graph.facebook.com/$facebook_profileid?fields=cover";
+"https://graph.facebook.com/$facebook_object_id?access_token=$facebook_graphapi_access_token";
+
 # "###" is for Smart::Comments CPAN Module
 ### \$facebook_graphapi_URL is: $facebook_graphapi_URL;
 
@@ -50,7 +61,8 @@ my $facebook_graphapi_URL =
 my $http_request = WWW::Mechanize->new;
 
 # TODO Availability of $facebook_graphapi_URL i.e. is "up" and resulting HTTP Status Code
-my $http_response = $http_request->get("$facebook_graphapi_URL")->content;
+my $http_response =
+  $http_request->get("$facebook_graphapi_URL")->decoded_content;
 
 # decode_json returns a reference to a hash
 # TODO -debug flag as a command line argument
@@ -62,7 +74,7 @@ print DEBUG_LOG ( Data::Dumper::Dumper( decode_json($http_response) ) );
 close DEBUG_LOG;
 
 print("\t<Entities>\n");
-my $http_response_ref = decode_json($http_response)->{cover};
+my $http_response_ref = decode_json($http_response);
 if ($http_response_ref) {
     my %http_response = %$http_response_ref;
     print(
@@ -70,20 +82,28 @@ if ($http_response_ref) {
     );
     print("\t\t\t<AdditionalFields>\n");
     print(
-        "\t\t\t\t<Field Name=\"fullimage\">$http_response{'source'}</Field>\n");
+        "\t\t\t\t<Field Name=\"fullimage\">$http_response{'picture'}</Field>\n"
+    );
     print("\t\t\t</AdditionalFields>\n");
-    print("\t\t\t<IconURL>$http_response{'source'}</IconURL>\n");
+    print("\t\t\t<IconURL>$http_response{'picture'}</IconURL>\n");
     print("\t\t</Entity>\n");
     print(
-"\t\t<Entity Type=\"maltego.FacebookObject\"><Value>$http_response{'id'}</Value>\n"
+        "\t\t<Entity Type=\"maltego.URL\"><Value>$http_response{'id'}</Value>\n"
     );
-    print("\t\t\t<IconURL>$http_response{'source'}</IconURL>\n");
+    print("\t\t\t<AdditionalFields>\n");
+    $http_response{'link'} = uri_escape( $http_response{'link'} );
+    print("\t\t\t\t<Field Name=\"url\">$http_response{'link'}</Field>\n");
+    print("\t\t\t\t<Field Name=\"title\">Public Link</Field>\n");
+    print("\t\t\t</AdditionalFields>\n");
+    print("\t\t\t<IconURL>$http_response{'picture'}</IconURL>\n");
     print("\t\t</Entity>\n");
+    print
+"<Entity Type=\"maltego.Phrase\"><Value>$http_response{'from'}->{'name'}</Value></Entity>\n";
 }
 else {
 
     # REFACTOR as <UIMessages>
-    print STDERR ("No Facebook Cover Photo for $facebook_profileid\n");
+    print STDERR ("No Facebook Object for $facebook_object_id\n");
 }
 
 # TODO Return optional error Maltego Entity.
@@ -95,26 +115,27 @@ print("</MaltegoMessage>\n");
 
 sub split_maltego_additional_fields {
 
-  my $maltego_additional_field_values = $_[0];
-  my @maltego_additional_field_values = split( '#', $maltego_additional_field_values );
+    my $maltego_additional_field_values = $_[0];
+    my @maltego_additional_field_values =
+      split( '#', $maltego_additional_field_values );
 
-  my %maltego_additional_field_values;
+    my %maltego_additional_field_values;
 
-  foreach (@maltego_additional_field_values) {
-    my ( $key, $value ) = split( /=/, $_, 2 );
-    $maltego_additional_field_values{"$key"} = "$value";
-  }
-    
-  return %maltego_additional_field_values;
+    foreach (@maltego_additional_field_values) {
+        my ( $key, $value ) = split( /=/, $_, 2 );
+        $maltego_additional_field_values{"$key"} = "$value";
+    }
+
+    return %maltego_additional_field_values;
 }
 
 =head1 NAME
 
-from_affliation_facebook-to_user_cover.pl - "To Facebook Profile Cover Image"
+from_facebook_object-to_image_and_name_and_link - "To Facebook Image, Name and Link"
 
 =head1 VERSION
 
-This documentation refers "To Facebook Profile Cover Image" Alpha v$VERSION
+This documentation refers "To Facebook Image, Name and Link" Alpha v$VERSION
 
 =head1 CONFIGURATION
 
@@ -122,7 +143,7 @@ Set the value(s) marked as #CONFIGURATION above this POD
     
 =head1 USAGE
 
-from_affliation_facebook-to_facebook_profile_cover_image.pl $maltego_selected_entity $maltego_additional_field_values
+from_facebook_object-to_image_and_name_and_link.pl $maltego_selected_entity $maltego_additional_field_values
 
 =head1 REQUIRED ARGUEMENTS
                 
@@ -130,7 +151,7 @@ from_affliation_facebook-to_facebook_profile_cover_image.pl $maltego_selected_en
 
 =head1 DESCRIPTION
 
-Returns the Facebook Cover Image and its ID in Maltego via the Facebook GraphAPI
+Returns the Facebook Image, Name and Link in Maltego via the Facebook GraphAPI
 
 =head1 DEPENDENCIES
 
@@ -138,6 +159,7 @@ Returns the Facebook Cover Image and its ID in Maltego via the Facebook GraphAPI
 
 JSON CPAN Module
 WWW::Mechanize CPAN Module
+JSON
 
 =head1 COREQUISITES
 
