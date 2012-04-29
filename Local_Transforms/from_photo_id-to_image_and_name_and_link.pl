@@ -91,6 +91,7 @@ if ($http_response_ref) {
         "\t\t<Entity Type=\"maltego.URL\"><Value>$http_response{'id'}</Value>\n"
     );
     print("\t\t\t<AdditionalFields>\n");
+    # ISSUE Insert $http_response{'link'} as "<![CDATA[$http_response{'link'}]]>" to resolve XML parsing error.
     $http_response{'link'} = uri_escape( $http_response{'link'} );
     print("\t\t\t\t<Field Name=\"url\">$http_response{'link'}</Field>\n");
     print("\t\t\t\t<Field Name=\"title\">Public Link</Field>\n");
