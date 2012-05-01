@@ -8,12 +8,11 @@ use JSON;
 use WWW::Mechanize;
 use Data::Dumper;
 use Config::Std;
-use URI::Escape;
 
 # #CONFIGURATION Remove "#" for Smart::Comments
 # use Smart::Comments;
 
-my $VERSION = "0.0.1"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0.2"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 # Command line arguments from Maltego
 my $maltego_selected_entity_value = $ARGV[0];
@@ -66,12 +65,12 @@ my $http_response =
 
 # decode_json returns a reference to a hash
 # TODO -debug flag as a command line argument
-open( DEBUG_LOG, ">>./json_debug_log.txt" );
-print DEBUG_LOG "# \$facebook_graphapi_URL\n\n";
-print DEBUG_LOG "$facebook_graphapi_URL\n\n";
-print DEBUG_LOG "# \http_request->get(\$facebook_graphapi_URL)->content\n\n";
-print DEBUG_LOG ( Data::Dumper::Dumper( decode_json($http_response) ) );
-close DEBUG_LOG;
+# open( DEBUG_LOG, ">>./json_debug_log.txt" );
+# print DEBUG_LOG "# \$facebook_graphapi_URL\n\n";
+# print DEBUG_LOG "$facebook_graphapi_URL\n\n";
+# print DEBUG_LOG "# \http_request->get(\$facebook_graphapi_URL)->content\n\n";
+# print DEBUG_LOG ( Data::Dumper::Dumper( decode_json($http_response) ) );
+# close DEBUG_LOG;
 
 print("\t<Entities>\n");
 my $http_response_ref = decode_json($http_response);
@@ -84,6 +83,7 @@ if ($http_response_ref) {
     print(
         "\t\t\t\t<Field Name=\"fullimage\">$http_response{'picture'}</Field>\n"
     );
+    # TODO "url" Field
     print("\t\t\t</AdditionalFields>\n");
     print("\t\t\t<IconURL>$http_response{'picture'}</IconURL>\n");
     print("\t\t</Entity>\n");
@@ -91,8 +91,7 @@ if ($http_response_ref) {
         "\t\t<Entity Type=\"maltego.URL\"><Value>$http_response{'id'}</Value>\n"
     );
     print("\t\t\t<AdditionalFields>\n");
-    $http_response{'link'} = uri_escape( $http_response{'link'} );
-    print("\t\t\t\t<Field Name=\"url\">$http_response{'link'}</Field>\n");
+    print("\t\t\t\t<Field Name=\"url\"><![CDATA[$http_response{'link'}]]></Field>\n");
     print("\t\t\t\t<Field Name=\"title\">Public Link</Field>\n");
     print("\t\t\t</AdditionalFields>\n");
     print("\t\t\t<IconURL>$http_response{'picture'}</IconURL>\n");
