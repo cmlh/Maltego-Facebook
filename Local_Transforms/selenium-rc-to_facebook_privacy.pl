@@ -6,7 +6,7 @@
 use strict;
 use Config::Std;
 use Test::More "no_plan";
-# my $builder = Test::More->builder->output('selenium.txt');
+my $builder = Test::More->builder->output('selenium.txt');
 use Test::WWW::Selenium;
 use Term::ANSIColor;
 
