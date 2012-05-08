@@ -11,7 +11,7 @@ use Digest::SHA;
 # #CONFIGURATION Remove "#" for Smart::Comments
 # use Smart::Comments;
 
-my $VERSION = "0.0.5"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0.6"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 # Command line arguments from Maltego
 my $maltego_selected_entity_value = $ARGV[0];
@@ -94,6 +94,9 @@ else {
 
     # REFACTOR as <UIMessages>
     print STDERR ("No Facebook Cover Photo for $facebook_profileid\n");
+	print(
+"\t\t<Entity Type=\"maltego.image\"><Value>No Cover</Value></Entity>\n"
+    );
 }
 
 # TODO Return optional error Maltego Entity.
