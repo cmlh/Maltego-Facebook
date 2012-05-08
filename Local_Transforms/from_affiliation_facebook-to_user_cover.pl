@@ -6,11 +6,12 @@ use strict;
 use JSON;
 use WWW::Mechanize;
 use Data::Dumper;
+use Digest::SHA;
 
 # #CONFIGURATION Remove "#" for Smart::Comments
-# Smart::Comments;
+# use Smart::Comments;
 
-my $VERSION = "0.0.4"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0.5"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 # Command line arguments from Maltego
 my $maltego_selected_entity_value = $ARGV[0];
@@ -26,16 +27,10 @@ my $maltego_additional_field_values = $ARGV[1];
 my %maltego_additional_field_values = split_maltego_additional_fields($maltego_additional_field_values);
 my $facebook_profileid = $maltego_additional_field_values{"uid"};
 
+my $facebook_affiliation_name = $maltego_selected_entity_value;
+
 # "###" is for Smart::Comments CPAN Module
 ### \$facebook_profileid is: $facebook_profileid;
-
-print("<MaltegoMessage>\n");
-print("<MaltegoTransformResponseMessage>\n");
-print("\t<UIMessages>\n");
-print(
-"\t\t<UIMessage MessageType=\"Inform\">Facebook GraphAPI Profile Cover Image Local Transform v$VERSION</UIMessage>\n"
-);
-print("\t</UIMessages>\n");
 
 my $facebook_graphapi_URL =
   "http://graph.facebook.com/$facebook_profileid?fields=cover";
@@ -54,19 +49,34 @@ my $http_response = $http_request->get("$facebook_graphapi_URL")->content;
 
 # decode_json returns a reference to a hash
 # TODO -debug flag as a command line argument
-open( DEBUG_LOG, ">>./json_debug_log.txt" );
-print DEBUG_LOG "# \$facebook_graphapi_URL\n\n";
-print DEBUG_LOG "$facebook_graphapi_URL\n\n";
-print DEBUG_LOG "# \http_request->get(\$facebook_graphapi_URL)->content\n\n";
-print DEBUG_LOG ( Data::Dumper::Dumper( decode_json($http_response) ) );
-close DEBUG_LOG;
+# open( DEBUG_LOG, ">>./json_debug_log.txt" );
+# print DEBUG_LOG "# \$facebook_graphapi_URL\n\n";
+# print DEBUG_LOG "$facebook_graphapi_URL\n\n";
+# print DEBUG_LOG "# \http_request->get(\$facebook_graphapi_URL)->content\n\n";
+# print DEBUG_LOG ( Data::Dumper::Dumper( decode_json($http_response) ) );
+# close DEBUG_LOG;
+
+print("<MaltegoMessage>\n");
+print("<MaltegoTransformResponseMessage>\n");
+print("\t<UIMessages>\n");
+print(
+"\t\t<UIMessage MessageType=\"Inform\">Facebook GraphAPI Profile Cover Image Local Transform v$VERSION</UIMessage>\n"
+);
+print("\t</UIMessages>\n");
 
 print("\t<Entities>\n");
 my $http_response_ref = decode_json($http_response)->{cover};
 if ($http_response_ref) {
     my %http_response = %$http_response_ref;
+    $facebook_affiliation_name =~ s/\s//g;
+    $http_request->mirror($http_response{'source'}, "$facebook_affiliation_name.jpg");
+	open COVER_JPG, "$facebook_affiliation_name.jpg";
+	my $sha2 = new Digest::SHA;
+	$sha2->addfile(*COVER_JPG);
+	close COVER_JPG;
+	my $hex = $sha2->hexdigest();
     print(
-"\t\t<Entity Type=\"maltego.image\"><Value>$http_response{'id'}</Value>\n"
+"\t\t<Entity Type=\"maltego.image\"><Value>$hex</Value>\n"
     );
     print("\t\t\t<AdditionalFields>\n");
     print(
@@ -138,6 +148,7 @@ Returns the Facebook Cover Image and its ID in Maltego via the Facebook GraphAPI
 
 JSON CPAN Module
 WWW::Mechanize CPAN Module
+Digest::SHA CPAN Module
 
 =head1 COREQUISITES
 
