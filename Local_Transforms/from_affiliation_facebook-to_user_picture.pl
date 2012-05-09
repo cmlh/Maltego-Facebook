@@ -11,7 +11,7 @@ use File::Basename;
 # #CONFIGURATION Remove "#" for Smart::Comments
 # use Smart::Comments;
 
-my $VERSION = "0.0.3"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0.4"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 # Command line arguments from Maltego
 my $maltego_selected_entity_value = $ARGV[0];
@@ -24,18 +24,11 @@ my $maltego_additional_field_values = $ARGV[1];
 # "###" is for Smart::Comments CPAN Module
 ### \$maltego_additional_field_values is: $maltego_additional_field_values;
 
-my @maltego_additional_field_values =
-  split( '#', $maltego_additional_field_values );
+my %maltego_additional_field_values = split_maltego_additional_fields($maltego_additional_field_values);
+my $facebook_profileid = $maltego_additional_field_values{"uid"};
 
-my $facebook_profile_name = $maltego_selected_entity_value;
-my $facebook_profileid    = $maltego_additional_field_values[3];
+my $facebook_affiliation_name = $maltego_selected_entity_value;
 
-# Workaround for the "#attachments_internal=x" matelgo additional field
-# REFACTOR @maltego_additional_field_values to a hash based on key"="value of each element
-if ( $facebook_profileid !~ m/uid=/ ) {
-    $facebook_profileid = $maltego_additional_field_values[4];
-}
-$facebook_profileid =~ s/(uid=)//g;
 
 # "###" is for Smart::Comments CPAN Module
 ### \$facebook_profileid is: $facebook_profileid;
@@ -88,7 +81,7 @@ print("\t\t</Entity>\n");
 print("\t\t<Entity Type=\"maltego.URL\"><Value>$facebook_photo_filename</Value>\n");
 print("\t\t\t<AdditionalFields>\n");
 print("\t\t\t\t<Field Name=\"url\">$facebook_graphapi_redirect_URL</Field>\n");
-print("\t\t\t\t<Field Name=\"title\">$facebook_profile_name</Field>\n");
+print("\t\t\t\t<Field Name=\"title\">$facebook_affiliation_name</Field>\n");
 print("\t\t\t</AdditionalFields>\n");
 print("\t\t\t<IconURL>$facebook_graphapi_URL</IconURL>\n");
 print("\t\t</Entity>\n");
@@ -99,6 +92,21 @@ print("\t</Entities>\n");
 # http://ctas.paterva.com/view/Specification#Message_Wrapper
 print("</MaltegoTransformResponseMessage>\n");
 print("</MaltegoMessage>\n");
+
+sub split_maltego_additional_fields {
+
+  my $maltego_additional_field_values = $_[0];
+  my @maltego_additional_field_values = split( '#', $maltego_additional_field_values );
+
+  my %maltego_additional_field_values;
+
+  foreach (@maltego_additional_field_values) {
+    my ( $key, $value ) = split( /=/, $_, 2 );
+    $maltego_additional_field_values{"$key"} = "$value";
+  }
+    
+  return %maltego_additional_field_values;
+}
 
 =head1 NAME
 
