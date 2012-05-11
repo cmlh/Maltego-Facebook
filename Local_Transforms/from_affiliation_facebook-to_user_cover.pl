@@ -1,4 +1,5 @@
 #!/usr/bin/env perl
+# The above shebang is for "perlbrew", otherwise use /usr/bin/perl or the file path quoted for "which perl"
 #
 # Please refer to the Plain Old Documentation (POD) at the end of this Perl Script for further information
 
@@ -11,7 +12,7 @@ use Digest::SHA;
 # #CONFIGURATION Remove "#" for Smart::Comments
 # use Smart::Comments;
 
-my $VERSION = "0.0.6"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0.7"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 # Command line arguments from Maltego
 my $maltego_selected_entity_value = $ARGV[0];
@@ -24,7 +25,8 @@ my $maltego_additional_field_values = $ARGV[1];
 # "###" is for Smart::Comments CPAN Module
 ### \$maltego_additional_field_values is: $maltego_additional_field_values;
 
-my %maltego_additional_field_values = split_maltego_additional_fields($maltego_additional_field_values);
+my %maltego_additional_field_values =
+  split_maltego_additional_fields($maltego_additional_field_values);
 my $facebook_profileid = $maltego_additional_field_values{"uid"};
 
 my $facebook_affiliation_name = $maltego_selected_entity_value;
@@ -34,6 +36,7 @@ my $facebook_affiliation_name = $maltego_selected_entity_value;
 
 my $facebook_graphapi_URL =
   "http://graph.facebook.com/$facebook_profileid?fields=cover";
+
 # "###" is for Smart::Comments CPAN Module
 ### \$facebook_graphapi_URL is: $facebook_graphapi_URL;
 
@@ -69,15 +72,14 @@ my $http_response_ref = decode_json($http_response)->{cover};
 if ($http_response_ref) {
     my %http_response = %$http_response_ref;
     $facebook_affiliation_name =~ s/\s//g;
-    $http_request->mirror($http_response{'source'}, "$facebook_affiliation_name.jpg");
-	open COVER_JPG, "$facebook_affiliation_name.jpg";
-	my $sha2 = new Digest::SHA;
-	$sha2->addfile(*COVER_JPG);
-	close COVER_JPG;
-	my $hex = $sha2->hexdigest();
-    print(
-"\t\t<Entity Type=\"maltego.image\"><Value>$hex</Value>\n"
-    );
+    $http_request->mirror( $http_response{'source'},
+        "./Images/Covers/$facebook_affiliation_name.jpg" );
+    open COVER_JPG, "./Images/Covers/$facebook_affiliation_name.jpg";
+    my $sha2 = new Digest::SHA;
+    $sha2->addfile(*COVER_JPG);
+    close COVER_JPG;
+    my $hex = $sha2->hexdigest();
+    print( "\t\t<Entity Type=\"maltego.image\"><Value>$hex</Value>\n" );
     print("\t\t\t<AdditionalFields>\n");
     print(
         "\t\t\t\t<Field Name=\"fullimage\">$http_response{'source'}</Field>\n");
@@ -94,8 +96,8 @@ else {
 
     # REFACTOR as <UIMessages>
     print STDERR ("No Facebook Cover Photo for $facebook_profileid\n");
-	print(
-"\t\t<Entity Type=\"maltego.image\"><Value>No Cover</Value></Entity>\n"
+    print(
+        "\t\t<Entity Type=\"maltego.image\"><Value>No Cover</Value></Entity>\n"
     );
 }
 
@@ -108,17 +110,18 @@ print("</MaltegoMessage>\n");
 
 sub split_maltego_additional_fields {
 
-  my $maltego_additional_field_values = $_[0];
-  my @maltego_additional_field_values = split( '#', $maltego_additional_field_values );
+    my $maltego_additional_field_values = $_[0];
+    my @maltego_additional_field_values =
+      split( '#', $maltego_additional_field_values );
 
-  my %maltego_additional_field_values;
+    my %maltego_additional_field_values;
 
-  foreach (@maltego_additional_field_values) {
-    my ( $key, $value ) = split( /=/, $_, 2 );
-    $maltego_additional_field_values{"$key"} = "$value";
-  }
-    
-  return %maltego_additional_field_values;
+    foreach (@maltego_additional_field_values) {
+        my ( $key, $value ) = split( /=/, $_, 2 );
+        $maltego_additional_field_values{"$key"} = "$value";
+    }
+
+    return %maltego_additional_field_values;
 }
 
 =head1 NAME
