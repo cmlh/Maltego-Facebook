@@ -10,7 +10,7 @@ use Data::Dumper;
 # #CONFIGURATION Remove "#" for Smart::Comments
 # use Smart::Comments;
 
-my $VERSION = "0.0.1"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0.2"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 # Command line arguments from Maltego
 my $maltego_selected_entity_value = $ARGV[0];
@@ -55,7 +55,7 @@ print(
 print("\t</UIMessages>\n");
 
 my $facebook_graphapi_URL =
-  "http://graph.facebook.com/$affilation_facebook_uid";
+  "https://graph.facebook.com/$affilation_facebook_uid";
 
 # Create a new JSON request
 
