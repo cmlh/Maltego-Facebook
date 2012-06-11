@@ -3,14 +3,12 @@
 # Please refer to the Plain Old Documentation (POD) at the end of this Perl Script for further information
 
 use strict;
-use JSON;
-use WWW::Mechanize;
 use Data::Dumper;
 
 # #CONFIGURATION Remove "#" for Smart::Comments
 # use Smart::Comments;
 
-my $VERSION = "0.0.2"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0.1"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 # Command line arguments from Maltego
 my $maltego_selected_entity_value = $ARGV[0];
@@ -26,6 +24,7 @@ my $maltego_additional_field_values = $ARGV[1];
 my @maltego_additional_field_values =
   split( '#', $maltego_additional_field_values );
 
+# TODO Refactor with sub split_maltego_additional_fields()
 # TODO If UID field is empty, then extract UID from the "Profile URL" field
 my $affilation_facebook_uid = $maltego_additional_field_values[3];
 
@@ -35,61 +34,20 @@ if ( $affilation_facebook_uid !~ m/uid=/ ) {
     $affilation_facebook_uid = $maltego_additional_field_values[4];
 }
 
-#$facebook_timeline_profile is 1 if uid contains non digit characters and 2 if it has $http_response->{cover}
-my $facebook_timeline_profile = 0;
-
 $affilation_facebook_uid =~ s/(uid=)//g;
-if ($affilation_facebook_uid =~ m/^\D/) {
-	$facebook_timeline_profile = 1;
-}
-
-# "###" is for Smart::Comments CPAN Module
-### \$facebook_timeline_profile is: $facebook_timeline_profile;
 
 print("<MaltegoMessage>\n");
 print("<MaltegoTransformResponseMessage>\n");
 print("\t<UIMessages>\n");
 print(
-"\t\t<UIMessage MessageType=\"Inform\">Facebook GraphAPI Profile Cover Image Local Transform v$VERSION</UIMessage>\n"
+"\t\t<UIMessage MessageType=\"Inform\">To Bookmarked Local Transform v$VERSION</UIMessage>\n"
 );
 print("\t</UIMessages>\n");
 
-my $facebook_graphapi_URL =
-  "https://graph.facebook.com/$affilation_facebook_uid";
-
-# Create a new JSON request
-
-# TODO Replace WWW::Mechanize with HTTP::Tiny CPAN Module
-# TODO Replace WWW::Mechanize with libwhisker
-# TODO Replace WWW::Mechanize with LWP::UserAgent
-my $http_request = WWW::Mechanize->new;
-
-# TODO Availability of $facebook_graphapi_URL i.e. is "up" and resulting HTTP Status Code
-my $http_response = $http_request->get("$facebook_graphapi_URL")->content;
-
-# The Cover Photo is another characteristic of a Facebook "Timeline" Profile
-my $http_response_ref = decode_json($http_response)->{cover};
-if ($http_response_ref) {
-	$facebook_timeline_profile++;
-}
-
-# "###" is for Smart::Comments CPAN Module
-### \$facebook_timeline_profile is: $facebook_timeline_profile;
-
 print("\t<Entities>\n");
 
-my $http_response_ref = decode_json($http_response);
-if ($http_response_ref) {
-    my %http_response = %$http_response_ref;
-    print(
-"\t\t<Entity Type=\"cmlh.facebook.user.id\"><Value>$http_response{'id'}</Value></Entity>\n"
-    );
-}
-else {
-
-    # REFACTOR as <UIMessages>
-    print STDERR ("$affilation_facebook_uid is not a Facebook User\n");
-}
+# TODO Insert Date and Time
+print("<Entity Type=\"maltego.Phrase\"><Value>Reviewed</Value></Entity>\n");
 
 # TODO Return optional error Maltego Entity.
 print("\t</Entities>\n");
@@ -100,11 +58,11 @@ print("</MaltegoMessage>\n");
 
 =head1 NAME
 
-from_affliation_facebook-to_user_cover.pl - "To Facebook Profile Cover Image"
+to_bookmarked.pl - "To Bookmarked"
 
 =head1 VERSION
 
-This documentation refers "To Facebook Profile Cover Image" Alpha v$VERSION
+This documentation refers "To Bookmarked" Alpha v$VERSION
 
 =head1 CONFIGURATION
 
@@ -112,7 +70,7 @@ Set the value(s) marked as #CONFIGURATION above this POD
     
 =head1 USAGE
 
-from_affliation_facebook-to_profile_cover_image.pl $maltego_selected_entity $maltego_additional_field_values
+to_reviewed.pl $maltego_selected_entity $maltego_additional_field_values
 
 =head1 REQUIRED ARGUEMENTS
                 
@@ -120,14 +78,11 @@ from_affliation_facebook-to_profile_cover_image.pl $maltego_selected_entity $mal
 
 =head1 DESCRIPTION
 
-Returns the Facebook Cover Image and its FBID in Maltego via the Facebook GraphAPI
+Returns the "Bookmarked" as a phrase (which can be subsequently modified with whatever) in Maltego as an alternative to Bookmarks.
 
 =head1 DEPENDENCIES
 
 =head1 PREREQUISITES
-
-JSON CPAN Module
-WWW::Mechanize CPAN Module
 
 =head1 COREQUISITES
 
@@ -180,5 +135,3 @@ See the License for the specific language governing permissions and
 limitations under the License. 
 
 Copyright 2012 Christian Heinrich
-
-

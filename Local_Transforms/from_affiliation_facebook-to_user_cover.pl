@@ -12,7 +12,7 @@ use Digest::SHA;
 # #CONFIGURATION Remove "#" for Smart::Comments
 # use Smart::Comments;
 
-my $VERSION = "0.0.7"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0.8"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 # Command line arguments from Maltego
 my $maltego_selected_entity_value = $ARGV[0];
@@ -35,7 +35,7 @@ my $facebook_affiliation_name = $maltego_selected_entity_value;
 ### \$facebook_profileid is: $facebook_profileid;
 
 my $facebook_graphapi_URL =
-  "http://graph.facebook.com/$facebook_profileid?fields=cover";
+  "https://graph.facebook.com/$facebook_profileid?fields=cover";
 
 # "###" is for Smart::Comments CPAN Module
 ### \$facebook_graphapi_URL is: $facebook_graphapi_URL;
