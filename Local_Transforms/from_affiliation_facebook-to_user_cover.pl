@@ -3,7 +3,11 @@
 #
 # Please refer to the Plain Old Documentation (POD) at the end of this Perl Script for further information
 
+do 'facebook_graphapi.pl';
+
 use strict;
+
+# use warnings;
 use JSON;
 use WWW::Mechanize;
 use Data::Dumper;
@@ -12,7 +16,7 @@ use Digest::SHA;
 # #CONFIGURATION Remove "#" for Smart::Comments
 # use Smart::Comments;
 
-my $VERSION = "0.0.8"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0.10"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 # Command line arguments from Maltego
 my $maltego_selected_entity_value = $ARGV[0];
@@ -65,21 +69,43 @@ print("\t<UIMessages>\n");
 print(
 "\t\t<UIMessage MessageType=\"Inform\">Facebook GraphAPI Profile Cover Image Local Transform v$VERSION</UIMessage>\n"
 );
-print("\t</UIMessages>\n");
 
-print("\t<Entities>\n");
 my $http_response_ref = decode_json($http_response)->{cover};
 if ($http_response_ref) {
-    my %http_response = %$http_response_ref;
-    $facebook_affiliation_name =~ s/\s//g;
+
+    my %http_response                 = %$http_response_ref;
+    my $facebook_affiliation_filename = $facebook_affiliation_name;
+    $facebook_affiliation_filename =~ s/\s//g;
+
+    #TODO Refactor as sub() {}
+    if ( -e "./Images/Covers/$facebook_affiliation_filename.jpg" ) {
+        open COVER_JPG, "./Images/Covers/$facebook_affiliation_filename.jpg";
+        my $sha = new Digest::SHA;
+        $sha->addfile(*COVER_JPG);
+        close COVER_JPG;
+        my $hex = $sha->hexdigest();
+        print(
+"\t\t<UIMessage MessageType=\"Inform\">SHA of previous $facebook_affiliation_filename.jpg is $hex</UIMessage>\n"
+        );
+    }
+    else {
+        print
+"\t\t<UIMessage MessageType=\"Inform\">./Images/Covers/$facebook_affiliation_filename.jpg does not exist</UIMessage>\n";
+    }
+
     $http_request->mirror( $http_response{'source'},
         "./Images/Covers/$facebook_affiliation_name.jpg" );
     open COVER_JPG, "./Images/Covers/$facebook_affiliation_name.jpg";
-    my $sha2 = new Digest::SHA;
-    $sha2->addfile(*COVER_JPG);
+    my $sha = new Digest::SHA;
+    $sha->addfile(*COVER_JPG);
     close COVER_JPG;
-    my $hex = $sha2->hexdigest();
-    print( "\t\t<Entity Type=\"maltego.image\"><Value>$hex</Value>\n" );
+    my $hex = $sha->hexdigest();
+    print(
+"\t\t<UIMessage MessageType=\"Inform\">SHA of recent $facebook_affiliation_filename.jpg is $hex</UIMessage>\n"
+    );
+    print("\t</UIMessages>\n");
+    print("\t<Entities>\n");
+    print("\t\t<Entity Type=\"maltego.image\"><Value>$hex</Value>\n");
     print("\t\t\t<AdditionalFields>\n");
     print(
         "\t\t\t\t<Field Name=\"fullimage\">$http_response{'source'}</Field>\n");
@@ -107,22 +133,6 @@ print("\t</Entities>\n");
 # http://ctas.paterva.com/view/Specification#Message_Wrapper
 print("</MaltegoTransformResponseMessage>\n");
 print("</MaltegoMessage>\n");
-
-sub split_maltego_additional_fields {
-
-    my $maltego_additional_field_values = $_[0];
-    my @maltego_additional_field_values =
-      split( '#', $maltego_additional_field_values );
-
-    my %maltego_additional_field_values;
-
-    foreach (@maltego_additional_field_values) {
-        my ( $key, $value ) = split( /=/, $_, 2 );
-        $maltego_additional_field_values{"$key"} = "$value";
-    }
-
-    return %maltego_additional_field_values;
-}
 
 =head1 NAME
 
