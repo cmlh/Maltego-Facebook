@@ -14,7 +14,7 @@ use Data::Dumper;
 # #CONFIGURATION Remove "#" for Smart::Comments
 # use Smart::Comments;
 
-my $VERSION = "0.0.3"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0.4"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 # Command line arguments from Maltego
 my $maltego_selected_entity_value = $ARGV[0];
@@ -53,17 +53,6 @@ my $http_request = WWW::Mechanize->new;
 
 # TODO Availability of $facebook_graphapi_URL i.e. is "up" and resulting HTTP Status Code
 my $http_response = $http_request->get("$facebook_graphapi_URL")->content;
-
-#$facebook_timeline_profile is 1 if uid contains non digit characters and 2 if it has $http_response->{cover}
-my $facebook_timeline_profile = 0;
-
-my $http_response_ref = decode_json($http_response)->{cover};
-if ($http_response_ref) {
-	$facebook_timeline_profile++;
-}
-
-# "###" is for Smart::Comments CPAN Module
-### \$facebook_timeline_profile is: $facebook_timeline_profile;
 
 print("\t<Entities>\n");
 
