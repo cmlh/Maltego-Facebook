@@ -2,7 +2,11 @@
 #
 # Please refer to the Plain Old Documentation (POD) at the end of this Perl Script for further information
 
+#TODO Refactor as module
+do 'facebook_graphapi.pl';
+
 use strict;
+# use warnings;
 use JSON;
 use WWW::Mechanize;
 use Data::Dumper;
@@ -10,7 +14,7 @@ use Data::Dumper;
 # #CONFIGURATION Remove "#" for Smart::Comments
 # use Smart::Comments;
 
-my $VERSION = "0.0.2"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0.3"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 # Command line arguments from Maltego
 my $maltego_selected_entity_value = $ARGV[0];
@@ -23,19 +27,11 @@ my $maltego_additional_field_values = $ARGV[1];
 # "###" is for Smart::Comments CPAN Module
 ### \$maltego_additional_field_values is: $maltego_additional_field_values;
 
-my @maltego_additional_field_values =
-  split( '#', $maltego_additional_field_values );
+my %maltego_additional_field_values =
+  split_maltego_additional_fields($maltego_additional_field_values);
+my $affilation_facebook_uid = $maltego_additional_field_values{"uid"};
 
-# TODO If UID field is empty, then extract UID from the "Profile URL" field
-my $affilation_facebook_uid = $maltego_additional_field_values[3];
-
-# Workaround for the "#attachments_internal=x" matelgo additional field
-# REFACTOR @maltego_additional_field_values to a hash based on key"="value of each element
-if ( $affilation_facebook_uid !~ m/uid=/ ) {
-    $affilation_facebook_uid = $maltego_additional_field_values[4];
-}
-
-$affilation_facebook_uid =~ s/(uid=)//g;
+my $facebook_affiliation_name = $maltego_selected_entity_value;
 
 print("<MaltegoMessage>\n");
 print("<MaltegoTransformResponseMessage>\n");
