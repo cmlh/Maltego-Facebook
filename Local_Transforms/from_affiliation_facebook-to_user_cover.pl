@@ -3,6 +3,8 @@
 #
 # Please refer to the Plain Old Documentation (POD) at the end of this Perl Script for further information
 
+do 'facebook_graphapi.pl';
+
 use strict;
 use JSON;
 use WWW::Mechanize;
@@ -12,7 +14,7 @@ use Digest::SHA;
 # #CONFIGURATION Remove "#" for Smart::Comments
 # use Smart::Comments;
 
-my $VERSION = "0.0.8"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0.9"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 # Command line arguments from Maltego
 my $maltego_selected_entity_value = $ARGV[0];
@@ -107,22 +109,6 @@ print("\t</Entities>\n");
 # http://ctas.paterva.com/view/Specification#Message_Wrapper
 print("</MaltegoTransformResponseMessage>\n");
 print("</MaltegoMessage>\n");
-
-sub split_maltego_additional_fields {
-
-    my $maltego_additional_field_values = $_[0];
-    my @maltego_additional_field_values =
-      split( '#', $maltego_additional_field_values );
-
-    my %maltego_additional_field_values;
-
-    foreach (@maltego_additional_field_values) {
-        my ( $key, $value ) = split( /=/, $_, 2 );
-        $maltego_additional_field_values{"$key"} = "$value";
-    }
-
-    return %maltego_additional_field_values;
-}
 
 =head1 NAME
 
