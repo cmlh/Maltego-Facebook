@@ -28,12 +28,12 @@ my $maltego_additional_field_values = $ARGV[1];
 my @maltego_additional_field_values =
   split( '#', $maltego_additional_field_values );
 
-my $fbid = $maltego_additional_field_values[1];  
+my $fbid = $maltego_additional_field_values[1];
 $fbid =~ s/(group.id=)//g;
 
 # "###" is for Smart::Comments CPAN Module
 ### \$fbid is: $fbid;
-  
+
 # CONFIGURATION
 # REFACTOR with "easydialogs" e.g. http://www.paterva.com/forum//index.php/topic,134.0.html as recommended by Andrew from Paterva
 read_config './etc/facebook_graphapi.conf' => my %config;
@@ -49,7 +49,6 @@ my $http_request = HTTP::Tiny->new;
 
 my @facebook_user_fbids;
 my @facebook_user_name;
-
 
 my $facebook_graphapi_event_connection = $_;
 
@@ -80,10 +79,11 @@ my @http_response = @$http_response_ref;
 
 for my $href (@http_response) {
     for ( keys %$href ) {
-         # REFACTOR Replace Arrays with Array of Hashes
-         push( @facebook_user_fbids, "$href->{'id'}" );
-         push( @facebook_user_name,  "$href->{'name'}" );
-	}
+
+        # REFACTOR Replace Arrays with Array of Hashes
+        push( @facebook_user_fbids, "$href->{'id'}" );
+        push( @facebook_user_name,  "$href->{'name'}" );
+    }
 }
 
 print("<MaltegoMessage>\n");

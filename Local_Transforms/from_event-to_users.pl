@@ -32,7 +32,6 @@ my @maltego_additional_field_values =
 my $facebook_event_id = $maltego_additional_field_values[2];
 $facebook_event_id =~ s/(event.id=)//g;
 
-
 # CONFIGURATION
 # REFACTOR with "easydialogs" e.g. http://www.paterva.com/forum//index.php/topic,134.0.html as recommended by Andrew from Paterva
 read_config './etc/facebook_graphapi.conf' => my %config;
@@ -62,7 +61,7 @@ foreach (@facebook_graphapi_event_connections) {
     # "###" is for Smart::Comments CPAN Module
     ### \$facebook_graphapi_URL is: $facebook_graphapi_URL;
 
-	# TODO Availability of $facebook_graphapi_URL i.e. is "up" and resulting HTTP Status Code
+# TODO Availability of $facebook_graphapi_URL i.e. is "up" and resulting HTTP Status Code
     my $http_response = $http_request->get("$facebook_graphapi_URL");
 
     # TODO Exit if OAuth Token i.e. $facebook_graphapi_access_token, is invalid
@@ -83,14 +82,15 @@ foreach (@facebook_graphapi_event_connections) {
 
     for my $href (@http_response) {
         for ( keys %$href ) {
-        	# REFACTOR Replace Arrays with Array of Hashes
+
+            # REFACTOR Replace Arrays with Array of Hashes
             push( @facebook_user_fbids, "$href->{'id'}" );
             push( @facebook_user_name,  "$href->{'name'}" );
         }
     }
     my $facebook_user_fbids_length = @facebook_user_fbids;
-    my $facebook_user_name_length = @facebook_user_name;
-    
+    my $facebook_user_name_length  = @facebook_user_name;
+
     # "###" is for Smart::Comments CPAN Module
     ### Length of \@facebook_user_fbids is: $facebook_user_fbids_length;
     ### Length of \@facebook_user_name is: $facebook_user_name_length;
@@ -102,8 +102,8 @@ open EVENT, (">$facebook_event_id.csv");
 my $facebook_user_name_element = 0;
 
 foreach (@facebook_user_fbids) {
-	print EVENT "$_,$facebook_user_name[$facebook_user_name_element]\n";
-	$facebook_user_name_element++;
+    print EVENT "$_,$facebook_user_name[$facebook_user_name_element]\n";
+    $facebook_user_name_element++;
 }
 close EVENT;
 

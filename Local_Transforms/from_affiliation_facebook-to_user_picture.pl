@@ -1,4 +1,5 @@
 #!/usr/bin/env perl
+# The above shebang is for "perlbrew", otherwise use /usr/bin/perl or the file path quoted for "which perl"
 #
 # Please refer to the Plain Old Documentation (POD) at the end of this Perl Script for further information
 
@@ -6,7 +7,9 @@
 do 'facebook_graphapi.pl';
 
 use strict;
+
 # use warnings;
+# ISSUE WONTFIX HTTP::Tiny does not support returning the redirected URL i.e. ->request->uri->as_string
 use LWP::UserAgent;
 use URI;
 use Data::Dumper;
@@ -66,18 +69,22 @@ $facebook_affiliation_filename =~ s/\s//g;
 # "###" is for Smart::Comments CPAN Module
 ### \$facebook_affiliation_filename.jpg is: "./Images/Pictures/$facebook_affiliation_filename.jpg"
 #TODO Refactor as sub() {}
-if (-e "./Images/Pictures/$facebook_affiliation_filename.jpg") {
-	open PICTURE_JPG, "./Images/Pictures/$facebook_affiliation_filename.jpg";
-	my $sha = new Digest::SHA;
-	$sha->addfile(*PICTURE_JPG);
-	close PICTURE_JPG;
-	my $hex = $sha->hexdigest();
-	print(
+if ( -e "./Images/Pictures/$facebook_affiliation_filename.jpg" ) {
+    open PICTURE_JPG, "./Images/Pictures/$facebook_affiliation_filename.jpg";
+    my $sha = new Digest::SHA;
+    $sha->addfile(*PICTURE_JPG);
+    close PICTURE_JPG;
+    my $hex = $sha->hexdigest();
+    print(
 "\t\t<UIMessage MessageType=\"Inform\">SHA of previous $facebook_affiliation_filename.jpg is $hex</UIMessage>\n"
-);
-} else { print "\t\t<UIMessage MessageType=\"Inform\">./Images/Pictures/$facebook_affiliation_filename.jpg does not exist</UIMessage>\n"; }
+    );
+}
+else {
+    print
+"\t\t<UIMessage MessageType=\"Inform\">./Images/Pictures/$facebook_affiliation_filename.jpg does not exist</UIMessage>\n";
+}
 
-#TODO Refactor as sub() {}	
+#TODO Refactor as sub() {}
 $http_request->mirror( $facebook_graphapi_redirect_URL,
     "./Images/Pictures/$facebook_affiliation_filename.jpg" );
 open PICTURE_JPG, "./Images/Pictures/$facebook_affiliation_filename.jpg";
@@ -92,10 +99,9 @@ print("\t</UIMessages>\n");
 
 print("\t<Entities>\n");
 
-print( "\t\t<Entity Type=\"maltego.image\"><Value>$hex</Value>\n" );
+print("\t\t<Entity Type=\"maltego.image\"><Value>$hex</Value>\n");
 print("\t\t\t<AdditionalFields>\n");
-print(
-    "\t\t\t\t<Field Name=\"url\">$facebook_graphapi_redirect_URL</Field>\n" );
+print("\t\t\t\t<Field Name=\"url\">$facebook_graphapi_redirect_URL</Field>\n");
 print("\t\t\t</AdditionalFields>\n");
 print("\t\t\t<IconURL>$facebook_graphapi_URL</IconURL>\n");
 print("\t\t</Entity>\n");

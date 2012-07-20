@@ -1,16 +1,22 @@
 #!/usr/bin/env perl
+# The above shebang is for "perlbrew", otherwise use /usr/bin/perl or the file path quoted for "which perl"
 #
 # Please refer to the Plain Old Documentation (POD) at the end of this Perl Script for further information
 
+#TODO Refactor as module
+do 'facebook_graphapi.pl';
+
 use strict;
+
+# use warnings;
 use JSON;
-use WWW::Mechanize;
+use HTTP::Tiny;
 use Data::Dumper;
 
 # #CONFIGURATION Remove "#" for Smart::Comments
 # use Smart::Comments;
 
-my $VERSION = "0.0.2"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0.4"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 # Command line arguments from Maltego
 my $maltego_selected_entity_value = $ARGV[0];
@@ -23,28 +29,11 @@ my $maltego_additional_field_values = $ARGV[1];
 # "###" is for Smart::Comments CPAN Module
 ### \$maltego_additional_field_values is: $maltego_additional_field_values;
 
-my @maltego_additional_field_values =
-  split( '#', $maltego_additional_field_values );
+my %maltego_additional_field_values =
+  split_maltego_additional_fields($maltego_additional_field_values);
+my $affilation_facebook_uid = $maltego_additional_field_values{"uid"};
 
-# TODO If UID field is empty, then extract UID from the "Profile URL" field
-my $affilation_facebook_uid = $maltego_additional_field_values[3];
-
-# Workaround for the "#attachments_internal=x" matelgo additional field
-# REFACTOR @maltego_additional_field_values to a hash based on key"="value of each element
-if ( $affilation_facebook_uid !~ m/uid=/ ) {
-    $affilation_facebook_uid = $maltego_additional_field_values[4];
-}
-
-#$facebook_timeline_profile is 1 if uid contains non digit characters and 2 if it has $http_response->{cover}
-my $facebook_timeline_profile = 0;
-
-$affilation_facebook_uid =~ s/(uid=)//g;
-if ($affilation_facebook_uid =~ m/^\D/) {
-	$facebook_timeline_profile = 1;
-}
-
-# "###" is for Smart::Comments CPAN Module
-### \$facebook_timeline_profile is: $facebook_timeline_profile;
+my $facebook_affiliation_name = $maltego_selected_entity_value;
 
 print("<MaltegoMessage>\n");
 print("<MaltegoTransformResponseMessage>\n");
@@ -52,33 +41,23 @@ print("\t<UIMessages>\n");
 print(
 "\t\t<UIMessage MessageType=\"Inform\">Facebook GraphAPI Profile Cover Image Local Transform v$VERSION</UIMessage>\n"
 );
-print("\t</UIMessages>\n");
 
 my $facebook_graphapi_URL =
   "https://graph.facebook.com/$affilation_facebook_uid";
 
 # Create a new JSON request
 
-# TODO Replace WWW::Mechanize with HTTP::Tiny CPAN Module
-# TODO Replace WWW::Mechanize with libwhisker
-# TODO Replace WWW::Mechanize with LWP::UserAgent
-my $http_request = WWW::Mechanize->new;
+# Create a new JSON request
+my $http_request  = HTTP::Tiny->new;
+my $http_response = $http_request->get("$facebook_graphapi_URL");
+facebook_graphapi_down("$facebook_graphapi_URL")
+  unless $http_response->{success};
 
-# TODO Availability of $facebook_graphapi_URL i.e. is "up" and resulting HTTP Status Code
-my $http_response = $http_request->get("$facebook_graphapi_URL")->content;
-
-# The Cover Photo is another characteristic of a Facebook "Timeline" Profile
-my $http_response_ref = decode_json($http_response)->{cover};
-if ($http_response_ref) {
-	$facebook_timeline_profile++;
-}
-
-# "###" is for Smart::Comments CPAN Module
-### \$facebook_timeline_profile is: $facebook_timeline_profile;
+print("\t</UIMessages>\n");
 
 print("\t<Entities>\n");
 
-my $http_response_ref = decode_json($http_response);
+my $http_response_ref = decode_json( $http_response->{content} );
 if ($http_response_ref) {
     my %http_response = %$http_response_ref;
     print(

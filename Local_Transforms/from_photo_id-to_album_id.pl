@@ -8,6 +8,7 @@ use JSON;
 use HTTP::Tiny;
 use URI::Escape;
 use Config::Std;
+
 # #CONFIGURATION Remove "#" for Smart::Comments
 # use Smart::Comments;
 
@@ -65,6 +66,7 @@ my $http_response = $http_request->get("$facebook_graphapi_URL");
 # print DEBUG_LOG "# \http_request->get(\$facebook_graphapi_URL)\n\n";
 # print DEBUG_LOG ( Data::Dumper::Dumper( $http_response->{content} ) );
 my $http_response_ref = decode_json( $http_response->{content} )->{data};
+
 # print DEBUG_LOG ( Data::Dumper::Dumper($http_response_ref) );
 # close DEBUG_LOG;
 
@@ -81,8 +83,7 @@ print(
 print("\t</UIMessages>\n");
 print("\t<Entities>\n");
 
-print(
-    "\t\t<Entity Type=\"cmlh.facebook.album.id\"><Value>$album_id</Value>\n" );
+print("\t\t<Entity Type=\"cmlh.facebook.album.id\"><Value>$album_id</Value>\n");
 print("\t\t</Entity>\n");
 print("\t</Entities>\n");
 

@@ -29,7 +29,6 @@ my @maltego_additional_field_values =
 
 my $facebook_album_id = $maltego_selected_entity_value;
 
-
 # "###" is for Smart::Comments CPAN Module
 ### \$facebook_profileid is: $facebook_profileid;
 
@@ -57,7 +56,7 @@ my $facebook_graphapi_redirect_URL = $http_response->request->uri->as_string;
 # "###" is for Smart::Comments CPAN Module
 ### \$facebook_graphapi_redirect_URL is: $facebook_graphapi_redirect_URL;
 
-my $facebook_photo_uri = new URI($facebook_graphapi_redirect_URL);
+my $facebook_photo_uri      = new URI($facebook_graphapi_redirect_URL);
 my $facebook_photo_filename = $facebook_photo_uri->path;
 
 # REFACTOR with regex rather than File::Basename
@@ -69,16 +68,17 @@ $facebook_photo_filename = basename($facebook_photo_filename);
 print("\t<Entities>\n");
 
 print(
-    "\t\t<Entity Type=\"maltego.image\"><Value>$facebook_photo_filename</Value>\n"
+"\t\t<Entity Type=\"maltego.image\"><Value>$facebook_photo_filename</Value>\n"
 );
 print("\t\t\t<AdditionalFields>\n");
 print(
-"\t\t\t\t<Field Name=\"url\">$facebook_graphapi_redirect_URL</Field>\n"
-);
+    "\t\t\t\t<Field Name=\"url\">$facebook_graphapi_redirect_URL</Field>\n" );
 print("\t\t\t</AdditionalFields>\n");
 print("\t\t\t<IconURL>$facebook_graphapi_URL</IconURL>\n");
 print("\t\t</Entity>\n");
-print("\t\t<Entity Type=\"maltego.URL\"><Value>$facebook_photo_filename</Value>\n");
+print(
+    "\t\t<Entity Type=\"maltego.URL\"><Value>$facebook_photo_filename</Value>\n"
+);
 print("\t\t\t<AdditionalFields>\n");
 print("\t\t\t\t<Field Name=\"url\">$facebook_graphapi_redirect_URL</Field>\n");
 print("\t\t\t\t<Field Name=\"title\">Album - Picture</Field>\n");

@@ -1,9 +1,10 @@
-#!/Users/cmlh/perl5/perlbrew/perls/perl-5.14.2/bin/perl
+#!/usr/bin/env perl
 # The above shebang is for "perlbrew", otherwise use /usr/bin/perl or the file path quoted for "which perl"
 #
 # Please refer to the Plain Old Documentation (POD) at the end of this Perl Script for further information
 
 use strict;
+
 # Not possible to define number of tests as it is defined by the number of *.pl files in ../Local_Transforms
 use Test::More "no_plan";
 
@@ -19,16 +20,20 @@ my @pl_files;
 my $pl_file;
 
 foreach $pl_file (@pl_files) {
-	# TODO Exclude to_bookmarked.pl from this test as sub split_maltego_additional_fields is not required by it.
-	print $pl_file . "\n";
-	open (PLFILE, $pl_file) or die "Could not open $pl_file";
-	my $line;
-	foreach $line (<PLFILE>) {
-		if ($line =~ "/uid=/") {
-			ok($line =~ "sub split_maltego_additional_fields {", "sub split_maltego_additional_fields");
-			diag("$line");
-		}
-	}
+
+# TODO Exclude to_bookmarked.pl from this test as sub split_maltego_additional_fields is not required by it.
+    print $pl_file . "\n";
+    open( PLFILE, $pl_file ) or die "Could not open $pl_file";
+    my $line;
+    foreach $line (<PLFILE>) {
+        if ( $line =~ "/uid=/" ) {
+            ok(
+                $line =~ "sub split_maltego_additional_fields {",
+                "sub split_maltego_additional_fields"
+            );
+            diag("$line");
+        }
+    }
 }
 
 =head1 NAME

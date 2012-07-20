@@ -1,45 +1,45 @@
 #!/usr/bin/env perl
+# The above shebang is for "perlbrew", otherwise use /usr/bin/perl or the file path quoted for "which perl"
 #
 # Please refer to the Plain Old Documentation (POD) at the end of this Perl Script for further information
 
-my $VERSION = "0.0.2"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+use strict;
 
-sub split_maltego_additional_fields {
+# Not possible to define number of tests as it is defined by the number of *.pl files in ../Local_Transforms
+use Test::More "no_plan";
 
-    my $maltego_additional_field_values = $_[0];
-    my @maltego_additional_field_values =
-      split( '#', $maltego_additional_field_values );
+# #CONFIGURATION Remove "#" for Smart::Comments
+# use Smart::Comments;
 
-    my %maltego_additional_field_values;
+my $VERSION = "0.0.1"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
-    foreach (@maltego_additional_field_values) {
-        my ( $key, $value ) = split( /=/, $_, 2 );
-        $maltego_additional_field_values{"$key"} = "$value";
+my @pl_files;
+
+@pl_files = <../*.pl>;
+
+my $pl_file;
+
+foreach $pl_file (@pl_files) {
+
+# TODO Exclude to_bookmarked.pl from this test as sub split_maltego_additional_fields is not required by it.
+    print $pl_file . "\n";
+    open( PLFILE, $pl_file ) or die "Could not open $pl_file";
+    my $line;
+    foreach $line (<PLFILE>) {
+        if ( $line =~ "do \'facebook_graphapi.pl\'\;" ) {
+            ok( $line =~ "do", "do facebook_graphapi.pl" );
+            diag("$line");
+        }
     }
-
-    return %maltego_additional_field_values;
-}
-
-sub facebook_graphapi_down {
-    $facebook_graphapi_URL = $_[0];
-    print(
-"\t\t<UIMessage MessageType=\"FatalError\">Cannot connect to $facebook_graphapi_URL</UIMessage>\n"
-    );
-    print("\t</UIMessages>\n");
-    print("\t<Entities>\n");
-    print("\t</Entities>\n");
-    print("</MaltegoTransformResponseMessage>\n");
-    print("</MaltegoMessage>\n");
-    exit 0;
 }
 
 =head1 NAME
 
-facebook_graphapi.pl
+split_maltego_additional_fields.pl - "sub split_maltego_additional_fields"
 
 =head1 VERSION
 
-This documentation refers facebook_graphapi.pl Alpha $VERSION
+This documentation refers "sub split_maltego_additional_fields" Alpha v$VERSION
 
 =head1 CONFIGURATION
 
@@ -47,13 +47,15 @@ Set the value(s) marked as #CONFIGURATION above this POD
     
 =head1 USAGE
 
+split_maltego_additional_fields.pl
+
 =head1 REQUIRED ARGUEMENTS
                 
 =head1 OPTIONAL ARGUEMENTS
 
 =head1 DESCRIPTION
 
-sub() {} for Maltego Transforms  
+Test to ensure that sub split_maltego_additional_fields is refactored.
 
 =head1 DEPENDENCIES
 
@@ -89,7 +91,7 @@ http://cmlh.id.au/contact
 
 =head1 REPOSITORY
 
-http://github.com/cmlh/
+http://github.com/cmlh/Maltego-Facebook
 
 =head1 FURTHER INFORMATION AND UPDATES
 
@@ -110,3 +112,5 @@ See the License for the specific language governing permissions and
 limitations under the License. 
 
 Copyright 2012 Christian Heinrich
+
+
