@@ -2,7 +2,7 @@
 #
 # Please refer to the Plain Old Documentation (POD) at the end of this Perl Script for further information
 
-my $VERSION = "0.0.1"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0.2"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 sub split_maltego_additional_fields {
 
@@ -18,6 +18,18 @@ sub split_maltego_additional_fields {
     }
 
     return %maltego_additional_field_values;
+}
+
+sub facebook_graphapi_down {
+	$facebook_graphapi_URL = $_[0];
+	print(
+		"\t\t<UIMessage MessageType=\"FatalError\">Cannot connect to $facebook_graphapi_URL</UIMessage>\n");
+	print("\t</UIMessages>\n");
+	print("\t<Entities>\n");
+	print("\t</Entities>\n");
+	print("</MaltegoTransformResponseMessage>\n");
+	print("</MaltegoMessage>\n");
+	exit 0;
 }
 
 =head1 NAME
