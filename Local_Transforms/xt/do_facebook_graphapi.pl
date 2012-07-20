@@ -4,6 +4,7 @@
 # Please refer to the Plain Old Documentation (POD) at the end of this Perl Script for further information
 
 use strict;
+
 # Not possible to define number of tests as it is defined by the number of *.pl files in ../Local_Transforms
 use Test::More "no_plan";
 
@@ -19,16 +20,17 @@ my @pl_files;
 my $pl_file;
 
 foreach $pl_file (@pl_files) {
-	# TODO Exclude to_bookmarked.pl from this test as sub split_maltego_additional_fields is not required by it.
-	print $pl_file . "\n";
-	open (PLFILE, $pl_file) or die "Could not open $pl_file";
-	my $line;
-	foreach $line (<PLFILE>) {
-		if ($line =~ "do \'facebook_graphapi.pl\'\;") {
-			ok($line =~ "do", "do facebook_graphapi.pl");
-			diag("$line");
-		}
-	}
+
+# TODO Exclude to_bookmarked.pl from this test as sub split_maltego_additional_fields is not required by it.
+    print $pl_file . "\n";
+    open( PLFILE, $pl_file ) or die "Could not open $pl_file";
+    my $line;
+    foreach $line (<PLFILE>) {
+        if ( $line =~ "do \'facebook_graphapi.pl\'\;" ) {
+            ok( $line =~ "do", "do facebook_graphapi.pl" );
+            diag("$line");
+        }
+    }
 }
 
 =head1 NAME
