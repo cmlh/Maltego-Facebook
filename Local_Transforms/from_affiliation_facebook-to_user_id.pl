@@ -33,12 +33,6 @@ my $affilation_facebook_uid = $maltego_additional_field_values{"uid"};
 
 my $facebook_affiliation_name = $maltego_selected_entity_value;
 
-#$facebook_timeline_profile is 1 if uid contains non digit characters and 2 if it has $http_response->{cover}
-my $facebook_timeline_profile = 0;
-
-# "###" is for Smart::Comments CPAN Module
-### \$facebook_timeline_profile is: $facebook_timeline_profile;
-
 print("<MaltegoMessage>\n");
 print("<MaltegoTransformResponseMessage>\n");
 print("\t<UIMessages>\n");
@@ -59,19 +53,10 @@ my $http_request = WWW::Mechanize->new;
 
 # TODO Availability of $facebook_graphapi_URL i.e. is "up" and resulting HTTP Status Code
 my $http_response = $http_request->get("$facebook_graphapi_URL")->content;
-
-# The Cover Photo is another characteristic of a Facebook "Timeline" Profile
-my $http_response_ref = decode_json($http_response)->{cover};
-if ($http_response_ref) {
-	$facebook_timeline_profile++;
-}
-
-# "###" is for Smart::Comments CPAN Module
-### \$facebook_timeline_profile is: $facebook_timeline_profile;
+my $http_response_ref = decode_json($http_response);
 
 print("\t<Entities>\n");
 
-my $http_response_ref = decode_json($http_response);
 if ($http_response_ref) {
     my %http_response = %$http_response_ref;
     print(
