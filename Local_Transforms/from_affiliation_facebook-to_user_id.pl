@@ -8,13 +8,13 @@ do 'facebook_graphapi.pl';
 use strict;
 # use warnings;
 use JSON;
-use WWW::Mechanize;
+use HTTP::Tiny;
 use Data::Dumper;
 
 # #CONFIGURATION Remove "#" for Smart::Comments
 # use Smart::Comments;
 
-my $VERSION = "0.0.3"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0.4"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 # Command line arguments from Maltego
 my $maltego_selected_entity_value = $ARGV[0];
@@ -39,24 +39,23 @@ print("\t<UIMessages>\n");
 print(
 "\t\t<UIMessage MessageType=\"Inform\">Facebook GraphAPI Profile Cover Image Local Transform v$VERSION</UIMessage>\n"
 );
-print("\t</UIMessages>\n");
+
 
 my $facebook_graphapi_URL =
   "https://graph.facebook.com/$affilation_facebook_uid";
 
 # Create a new JSON request
 
-# TODO Replace WWW::Mechanize with HTTP::Tiny CPAN Module
-# TODO Replace WWW::Mechanize with libwhisker
-# TODO Replace WWW::Mechanize with LWP::UserAgent
-my $http_request = WWW::Mechanize->new;
+# Create a new JSON request
+my $http_request = HTTP::Tiny->new;
+my $http_response = $http_request->get("$facebook_graphapi_URL");
+facebook_graphapi_down("$facebook_graphapi_URL") unless $http_response->{success};
 
-# TODO Availability of $facebook_graphapi_URL i.e. is "up" and resulting HTTP Status Code
-my $http_response = $http_request->get("$facebook_graphapi_URL")->content;
-my $http_response_ref = decode_json($http_response);
+print("\t</UIMessages>\n");
 
 print("\t<Entities>\n");
 
+my $http_response_ref = decode_json($http_response->{content});
 if ($http_response_ref) {
     my %http_response = %$http_response_ref;
     print(
