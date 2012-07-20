@@ -39,21 +39,16 @@ print("\t<UIMessages>\n");
 print(
 "\t\t<UIMessage MessageType=\"Inform\">Facebook GraphAPI Profile Cover Image Local Transform v$VERSION</UIMessage>\n"
 );
-print("\t</UIMessages>\n");
 
 my $facebook_graphapi_URL =
   "https://graph.facebook.com/$affilation_facebook_uid";
 
 # Create a new JSON request
-
-# TODO Replace WWW::Mechanize with HTTP::Tiny CPAN Module
-# TODO Replace WWW::Mechanize with libwhisker
-# TODO Replace WWW::Mechanize with LWP::UserAgent
 my $http_request = HTTP::Tiny->new;
-
-# TODO Availability of $facebook_graphapi_URL i.e. is "up" and resulting HTTP Status Code
 my $http_response = $http_request->get("$facebook_graphapi_URL");
+facebook_graphapi_down("$facebook_graphapi_URL") unless $http_response->{success};
 
+print("\t</UIMessages>\n");
 print("\t<Entities>\n");
 
 my $http_response_ref = decode_json($http_response->{content});
