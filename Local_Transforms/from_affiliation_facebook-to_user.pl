@@ -8,7 +8,7 @@ do 'facebook_graphapi.pl';
 use strict;
 # use warnings;
 use JSON;
-use WWW::Mechanize;
+use HTTP::Tiny;
 use Data::Dumper;
 
 # #CONFIGURATION Remove "#" for Smart::Comments
@@ -49,14 +49,14 @@ my $facebook_graphapi_URL =
 # TODO Replace WWW::Mechanize with HTTP::Tiny CPAN Module
 # TODO Replace WWW::Mechanize with libwhisker
 # TODO Replace WWW::Mechanize with LWP::UserAgent
-my $http_request = WWW::Mechanize->new;
+my $http_request = HTTP::Tiny->new;
 
 # TODO Availability of $facebook_graphapi_URL i.e. is "up" and resulting HTTP Status Code
-my $http_response = $http_request->get("$facebook_graphapi_URL")->content;
+my $http_response = $http_request->get("$facebook_graphapi_URL");
 
 print("\t<Entities>\n");
 
-my $http_response_ref = decode_json($http_response);
+my $http_response_ref = decode_json($http_response->{content});
 if ($http_response_ref) {
     my %http_response = %$http_response_ref;
     print(
