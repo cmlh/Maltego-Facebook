@@ -7,6 +7,7 @@
 do 'facebook_graphapi.pl';
 
 use strict;
+
 # use warnings;
 use JSON;
 use HTTP::Tiny;
@@ -41,22 +42,22 @@ print(
 "\t\t<UIMessage MessageType=\"Inform\">Facebook GraphAPI Profile Cover Image Local Transform v$VERSION</UIMessage>\n"
 );
 
-
 my $facebook_graphapi_URL =
   "https://graph.facebook.com/$affilation_facebook_uid";
 
 # Create a new JSON request
 
 # Create a new JSON request
-my $http_request = HTTP::Tiny->new;
+my $http_request  = HTTP::Tiny->new;
 my $http_response = $http_request->get("$facebook_graphapi_URL");
-facebook_graphapi_down("$facebook_graphapi_URL") unless $http_response->{success};
+facebook_graphapi_down("$facebook_graphapi_URL")
+  unless $http_response->{success};
 
 print("\t</UIMessages>\n");
 
 print("\t<Entities>\n");
 
-my $http_response_ref = decode_json($http_response->{content});
+my $http_response_ref = decode_json( $http_response->{content} );
 if ($http_response_ref) {
     my %http_response = %$http_response_ref;
     print(

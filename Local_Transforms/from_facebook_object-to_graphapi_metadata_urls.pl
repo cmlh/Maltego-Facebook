@@ -72,32 +72,41 @@ if ($http_response_ref) {
     print(
 "\t\t<Entity Type=\"maltego.Phrase\"><Value>$http_response{'metadata'}->{'type'}</Value></Entity>\n"
     );
-    # ISSUE $http_response{'type'} has moved to $http_response{'metadata'}->{'type'}
-    if ($http_response{'metadata'}->{'type'} eq "event") {
-    	 # TODO Return the 'Name' of the event rather than the FBID
-    	 # TODO Return the 'id' of the event as an Additional <Field>
-    	print("\t\t<Entity Type=\"cmlh.facebook.event\"><Value>$http_response{'name'}</Value>\n");
-    	print("\t\t\t<AdditionalFields>\n");
-    	print(
-        	"\t\t\t\t<Field Name=\"event.id\">$http_response{'id'}</Field>\n");
+
+# ISSUE $http_response{'type'} has moved to $http_response{'metadata'}->{'type'}
+    if ( $http_response{'metadata'}->{'type'} eq "event" ) {
+
+        # TODO Return the 'Name' of the event rather than the FBID
+        # TODO Return the 'id' of the event as an Additional <Field>
         print(
-        	"\t\t\t\t<Field Name=\"facebook.object\">$http_response{'id'}</Field>\n");
-    	print("\t\t\t</AdditionalFields>\n");
-    	print("\t\t</Entity>\n");
+"\t\t<Entity Type=\"cmlh.facebook.event\"><Value>$http_response{'name'}</Value>\n"
+        );
+        print("\t\t\t<AdditionalFields>\n");
+        print(
+            "\t\t\t\t<Field Name=\"event.id\">$http_response{'id'}</Field>\n");
+        print(
+"\t\t\t\t<Field Name=\"facebook.object\">$http_response{'id'}</Field>\n"
+        );
+        print("\t\t\t</AdditionalFields>\n");
+        print("\t\t</Entity>\n");
     }
-    if ($http_response{'metadata'}->{'type'} eq "group") {
-    	 # TODO Return the 'Name' of the event rather than the FBID
-    	 # TODO Return the 'id' of the event as an Additional <Field>
-    	print("\t\t<Entity Type=\"cmlh.facebook.group\"><Value>$http_response{'name'}</Value>\n");
-    	print("\t\t\t<AdditionalFields>\n");
-    	print(
-        	"\t\t\t\t<Field Name=\"group.id\">$http_response{'id'}</Field>\n");
-    	print(
-        	"\t\t\t\t<Field Name=\"facebook.object\">$http_response{'id'}</Field>\n");
-    	print("\t\t\t</AdditionalFields>\n");
-    	print("\t\t</Entity>\n");
+    if ( $http_response{'metadata'}->{'type'} eq "group" ) {
+
+        # TODO Return the 'Name' of the event rather than the FBID
+        # TODO Return the 'id' of the event as an Additional <Field>
+        print(
+"\t\t<Entity Type=\"cmlh.facebook.group\"><Value>$http_response{'name'}</Value>\n"
+        );
+        print("\t\t\t<AdditionalFields>\n");
+        print(
+            "\t\t\t\t<Field Name=\"group.id\">$http_response{'id'}</Field>\n");
+        print(
+"\t\t\t\t<Field Name=\"facebook.object\">$http_response{'id'}</Field>\n"
+        );
+        print("\t\t\t</AdditionalFields>\n");
+        print("\t\t</Entity>\n");
     }
-    
+
     print(
 "\t\t<Entity Type=\"maltego.FacebookObject\"><Value>$http_response{'id'}</Value></Entity>\n"
     );
@@ -107,14 +116,16 @@ if ($http_response_ref) {
         print("\t\t<Entity Type=\"maltego.URL\"><Value>$URL</Value>\n");
         print("\t\t\t<AdditionalFields>\n");
         print("\t\t\t\t<Field Name=\"url\">$connection_URL{$URL}</Field>\n");
+
         # "###" is for Smart::Comments CPAN Module
-		### \$URL is: $URL;
+        ### \$URL is: $URL;
         print("\t\t\t\t<Field Name=\"title\">$URL</Field>\n");
         print("\t\t\t</AdditionalFields>\n");
         print("\t\t</Entity>\n");
     }
 }
 else {
+
     # REFACTOR as <UIMessages>
     print STDERR ("No Metadata for $facebook_object_id\n");
 }

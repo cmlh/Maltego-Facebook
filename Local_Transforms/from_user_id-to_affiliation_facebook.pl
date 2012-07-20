@@ -37,8 +37,7 @@ print(
 );
 print("\t</UIMessages>\n");
 
-my $facebook_graphapi_URL =
-  "http://graph.facebook.com/$facebook_user_id";
+my $facebook_graphapi_URL = "http://graph.facebook.com/$facebook_user_id";
 
 # Create a new JSON request
 
@@ -49,7 +48,6 @@ my $http_request = WWW::Mechanize->new;
 
 # TODO Availability of $facebook_graphapi_URL i.e. is "up" and resulting HTTP Status Code
 my $http_response = $http_request->get("$facebook_graphapi_URL")->content;
-
 
 print("\t<Entities>\n");
 
@@ -63,13 +61,15 @@ if ($http_response_ref) {
 "\t\t<Entity Type=\"maltego.affiliation.Facebook\"><Value>$http_response{'name'}</Value>\n"
     );
     print("\t\t\t<AdditionalFields>\n");
+
     # ISSUE "affiliation.network" is by Default a "Read Only" field in Maltego.
+    print("\t\t\t\t<Field Name=\"affiliation.network\">Facebook</Field>\n");
     print(
-        "\t\t\t\t<Field Name=\"affiliation.network\">Facebook</Field>\n");
+        "\t\t\t\t<Field Name=\"affiliation.uid\">$http_response{'id'}</Field>\n"
+    );
     print(
-        "\t\t\t\t<Field Name=\"affiliation.uid\">$http_response{'id'}</Field>\n");
-    print(
-        "\t\t\t\t<Field Name=\"affiliation.profile-url\">http://www.facebook.com/profile.php?id=$http_response{'id'}</Field>\n");        
+"\t\t\t\t<Field Name=\"affiliation.profile-url\">http://www.facebook.com/profile.php?id=$http_response{'id'}</Field>\n"
+    );
     print("\t\t\t</AdditionalFields>\n");
     print("\t\t</Entity>\n");
 }

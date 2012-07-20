@@ -7,6 +7,7 @@
 do 'facebook_graphapi.pl';
 
 use strict;
+
 # use warnings;
 use JSON;
 use HTTP::Tiny;
@@ -45,49 +46,59 @@ my $facebook_graphapi_URL =
   "https://graph.facebook.com/$affilation_facebook_uid";
 
 # Create a new JSON request
-my $http_request = HTTP::Tiny->new;
+my $http_request  = HTTP::Tiny->new;
 my $http_response = $http_request->get("$facebook_graphapi_URL");
-facebook_graphapi_down("$facebook_graphapi_URL") unless $http_response->{success};
+facebook_graphapi_down("$facebook_graphapi_URL")
+  unless $http_response->{success};
 
 print("\t</UIMessages>\n");
 print("\t<Entities>\n");
 
-my $http_response_ref = decode_json($http_response->{content});
+my $http_response_ref = decode_json( $http_response->{content} );
 if ($http_response_ref) {
     my %http_response = %$http_response_ref;
     print(
 "\t\t<Entity Type=\"cmlh.facebook.user\"><Value>$http_response{'id'}</Value>\n"
     );
-    print ("\t\t<AdditionalFields>\n");
+    print("\t\t<AdditionalFields>\n");
     print("\t\t\t\t<Field Name=\"id\">$http_response{'id'}</Field>\n");
     print("\t\t\t\t<Field Name=\"name\">$http_response{'name'}</Field>\n");
-    print("\t\t\t\t<Field Name=\"name.first\">$http_response{'first_name'}</Field>\n");
-    print("\t\t\t\t<Field Name=\"name.middle\">$http_response{'middle_name'}</Field>\n");
-    print("\t\t\t\t<Field Name=\"name.last\">$http_response{'last_name'}</Field>\n");
-	print("\t\t\t\t<Field Name=\"gender\">$http_response{'gender'}</Field>\n");
-	print("\t\t\t\t<Field Name=\"locale\">$http_response{'locale'}</Field>\n");
-	
-	# TODO E-mail (Maltego) Entity based on Username
-	print("\t\t\t\t<Field Name=\"name.user\">$http_response{'username'}</Field>\n");
-	print ("\t\t</AdditionalFields>\n");
-	my $facebook_graphapi_user_picture_URL =
+    print(
+"\t\t\t\t<Field Name=\"name.first\">$http_response{'first_name'}</Field>\n"
+    );
+    print(
+"\t\t\t\t<Field Name=\"name.middle\">$http_response{'middle_name'}</Field>\n"
+    );
+    print(
+"\t\t\t\t<Field Name=\"name.last\">$http_response{'last_name'}</Field>\n"
+    );
+    print("\t\t\t\t<Field Name=\"gender\">$http_response{'gender'}</Field>\n");
+    print("\t\t\t\t<Field Name=\"locale\">$http_response{'locale'}</Field>\n");
+
+    # TODO E-mail (Maltego) Entity based on Username
+    print(
+        "\t\t\t\t<Field Name=\"name.user\">$http_response{'username'}</Field>\n"
+    );
+    print("\t\t</AdditionalFields>\n");
+    my $facebook_graphapi_user_picture_URL =
       "https://graph.facebook.com/$http_response{'id'}/picture";
-	print("\t\t\t<IconURL>$facebook_graphapi_user_picture_URL</IconURL>\n");
-	# Requires Access Token
-	# print("\t\t\t\t<Field Name=\"link\">$http_response{'link'}</Field>\n");
-	# third_party_id
-	# updated_time
-	# verified
-	# video_upload_limits
-	#
-	# Connections API
-	# friends - via connection 
-	# mutualfriends - via connection
-	# permissions - via connection
-	# picture
-	# subscribedto
-	# subscribers
-	print("\t\t</Entity>\n");
+    print("\t\t\t<IconURL>$facebook_graphapi_user_picture_URL</IconURL>\n");
+
+    # Requires Access Token
+    # print("\t\t\t\t<Field Name=\"link\">$http_response{'link'}</Field>\n");
+    # third_party_id
+    # updated_time
+    # verified
+    # video_upload_limits
+    #
+    # Connections API
+    # friends - via connection
+    # mutualfriends - via connection
+    # permissions - via connection
+    # picture
+    # subscribedto
+    # subscribers
+    print("\t\t</Entity>\n");
 }
 else {
 

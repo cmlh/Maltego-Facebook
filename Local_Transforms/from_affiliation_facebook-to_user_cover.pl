@@ -54,7 +54,6 @@ my $http_request = HTTP::Tiny->new;
 # TODO Availability of $facebook_graphapi_URL i.e. is "up" and resulting HTTP Status Code
 my $http_response = $http_request->get("$facebook_graphapi_URL");
 
-
 # decode_json returns a reference to a hash
 # TODO -debug flag as a command line argument
 # open( DEBUG_LOG, ">>./json_debug_log.txt" );
@@ -71,9 +70,10 @@ print(
 "\t\t<UIMessage MessageType=\"Inform\">Facebook GraphAPI Profile Cover Image Local Transform v$VERSION</UIMessage>\n"
 );
 
-facebook_graphapi_down("$facebook_graphapi_URL") unless $http_response->{success};
+facebook_graphapi_down("$facebook_graphapi_URL")
+  unless $http_response->{success};
 
-my $http_response_ref = decode_json($http_response->{content})->{cover};
+my $http_response_ref = decode_json( $http_response->{content} )->{cover};
 if ($http_response_ref) {
 
     my %http_response                 = %$http_response_ref;

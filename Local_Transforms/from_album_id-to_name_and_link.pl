@@ -80,7 +80,9 @@ if ($http_response_ref) {
         "\t\t<Entity Type=\"maltego.URL\"><Value>$http_response{'id'}</Value>\n"
     );
     print("\t\t\t<AdditionalFields>\n");
-    print("\t\t\t\t<Field Name=\"url\"><![CDATA[$http_response{'link'}]]></Field>\n");
+    print(
+"\t\t\t\t<Field Name=\"url\"><![CDATA[$http_response{'link'}]]></Field>\n"
+    );
     print("\t\t\t\t<Field Name=\"title\">Public Link</Field>\n");
     print("\t\t\t</AdditionalFields>\n");
     print("\t\t\t<IconURL>$http_response{'picture'}</IconURL>\n");

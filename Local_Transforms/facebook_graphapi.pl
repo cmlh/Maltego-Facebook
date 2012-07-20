@@ -21,15 +21,16 @@ sub split_maltego_additional_fields {
 }
 
 sub facebook_graphapi_down {
-	$facebook_graphapi_URL = $_[0];
-	print(
-		"\t\t<UIMessage MessageType=\"FatalError\">Cannot connect to $facebook_graphapi_URL</UIMessage>\n");
-	print("\t</UIMessages>\n");
-	print("\t<Entities>\n");
-	print("\t</Entities>\n");
-	print("</MaltegoTransformResponseMessage>\n");
-	print("</MaltegoMessage>\n");
-	exit 0;
+    $facebook_graphapi_URL = $_[0];
+    print(
+"\t\t<UIMessage MessageType=\"FatalError\">Cannot connect to $facebook_graphapi_URL</UIMessage>\n"
+    );
+    print("\t</UIMessages>\n");
+    print("\t<Entities>\n");
+    print("\t</Entities>\n");
+    print("</MaltegoTransformResponseMessage>\n");
+    print("</MaltegoMessage>\n");
+    exit 0;
 }
 
 =head1 NAME
