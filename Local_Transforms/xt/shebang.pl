@@ -5,13 +5,15 @@
 
 use strict;
 
+#use warnings;
+
 # Not possible to define number of tests as it is defined by the number of *.pl files in ../Local_Transforms
 use Test::More "no_plan";
 
 # #CONFIGURATION Remove "#" for Smart::Comments
 # use Smart::Comments;
 
-my $VERSION = "0.0.1"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0.2"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 my @pl_files;
 
@@ -25,17 +27,22 @@ foreach $pl_file (@pl_files) {
     print $pl_file . "\n";
     open( PLFILE, $pl_file ) or die "Could not open $pl_file";
     my $line;
+    my $result = "not ok";
     foreach $line (<PLFILE>) {
         if ( $line =~ "# The above shebang is for" ) {
+            $result = "ok";
             ok( $line =~ "shebang", "shebang" );
             diag("$line");
         }
+    }
+    if ( $result eq "not ok" ) {
+        fail("shebang");
     }
 }
 
 =head1 NAME
 
-split_maltego_additional_fields.pl - "sub split_maltego_additional_fields"
+shebang.pl - "shebang"
 
 =head1 VERSION
 
@@ -47,7 +54,7 @@ Set the value(s) marked as #CONFIGURATION above this POD
     
 =head1 USAGE
 
-split_maltego_additional_fields.pl
+shebang.pl
 
 =head1 REQUIRED ARGUEMENTS
                 
@@ -55,7 +62,7 @@ split_maltego_additional_fields.pl
 
 =head1 DESCRIPTION
 
-Test to ensure that sub split_maltego_additional_fields is refactored.
+Test to ensure that the shebang comment is correct.
 
 =head1 DEPENDENCIES
 
