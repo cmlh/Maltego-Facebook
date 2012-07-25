@@ -1,4 +1,4 @@
-#!/usr/bin/env perl
+#!/Users/cmlh/perl5/perlbrew/perls/perl-5.14.2/bin/perl
 # The above shebang is for "perlbrew", otherwise use /usr/bin/perl or the file path quoted for "which perl"
 #
 # Please refer to the Plain Old Documentation (POD) at the end of this Perl Script for further information
@@ -11,7 +11,7 @@ use Test::More "no_plan";
 # #CONFIGURATION Remove "#" for Smart::Comments
 # use Smart::Comments;
 
-my $VERSION = "0.0.1"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0.2"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 my @pl_files;
 
@@ -25,11 +25,16 @@ foreach $pl_file (@pl_files) {
     print $pl_file . "\n";
     open( PLFILE, $pl_file ) or die "Could not open $pl_file";
     my $line;
+    my $result = "not ok";
     foreach $line (<PLFILE>) {
         if ( $line =~ "do \'facebook_graphapi.pl\'\;" ) {
+            $result = "ok";
             ok( $line =~ "do", "do facebook_graphapi.pl" );
             diag("$line");
         }
+    }
+    if ( $result eq "not ok" ) {
+        fail("do facebook_graphapi.pl");
     }
 }
 
