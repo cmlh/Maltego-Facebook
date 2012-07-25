@@ -1,4 +1,4 @@
-#!/Users/cmlh/perl5/perlbrew/perls/perl-5.14.2/bin/perl
+#!/usr/bin/env perl
 # The above shebang is for "perlbrew", otherwise use /usr/bin/perl or the file path quoted for "which perl"
 #
 # Please refer to the Plain Old Documentation (POD) at the end of this Perl Script for further information
@@ -40,11 +40,11 @@ foreach $pl_file (@pl_files) {
 
 =head1 NAME
 
-split_maltego_additional_fields.pl - "sub split_maltego_additional_fields"
+do_facebook_graphapi.pl - "do_facebook_graphapi test"
 
 =head1 VERSION
 
-This documentation refers "sub split_maltego_additional_fields" Alpha v$VERSION
+This documentation refers "do_facebook_graphapi test" Alpha v$VERSION
 
 =head1 CONFIGURATION
 
@@ -52,7 +52,7 @@ Set the value(s) marked as #CONFIGURATION above this POD
     
 =head1 USAGE
 
-split_maltego_additional_fields.pl
+do_facebook_graphapi.pl
 
 =head1 REQUIRED ARGUEMENTS
                 
@@ -60,7 +60,7 @@ split_maltego_additional_fields.pl
 
 =head1 DESCRIPTION
 
-Test to ensure that sub split_maltego_additional_fields is refactored.
+Test to ensure that do_facebook_graphapi.pl is refactored.
 
 =head1 DEPENDENCIES
 
