@@ -2,6 +2,9 @@
 #
 # Please refer to the Plain Old Documentation (POD) at the end of this Perl Script for further information
 
+use strict;
+# use warnings;
+
 my $VERSION = "0.0.2"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 sub split_maltego_additional_fields {

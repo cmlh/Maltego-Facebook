@@ -4,6 +4,7 @@
 # Please refer to the Plain Old Documentation (POD) at the end of this Perl Script for further information
 
 use strict;
+# use warnings;
 use Config::Std;
 use Test::More "no_plan";
 my $builder = Test::More->builder->output('selenium.txt');
