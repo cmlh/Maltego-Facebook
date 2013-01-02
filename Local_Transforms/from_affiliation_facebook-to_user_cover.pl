@@ -14,8 +14,8 @@ use strict;
 use warnings qw(FATAL);
 use diagnostics;
 
-use JSON;
-use HTTP::Tiny;
+use JSON; # JSON v2.53
+use HTTP::Tiny;	# HTTP::Tiny v0.024
 use Data::Dumper;
 use Digest::SHA;
 
