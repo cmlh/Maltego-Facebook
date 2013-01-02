@@ -5,8 +5,12 @@
 
 do 'facebook_graphapi.pl';
 
-use strict;
+# Perl v5.8 is the minimum version required for 'use autodie'
+# Perl v5.8.1 is the minimum version required for 'use utf8'
+use 5.0080001;
+use v5.8.1;
 
+use strict;
 use warnings qw(FATAL);
 use diagnostics;
 
