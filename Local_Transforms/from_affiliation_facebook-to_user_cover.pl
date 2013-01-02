@@ -7,7 +7,9 @@ do 'facebook_graphapi.pl';
 
 use strict;
 
-# use warnings;
+use warnings qw(FATAL);
+use diagnostics;
+
 use JSON;
 use HTTP::Tiny;
 use Data::Dumper;
