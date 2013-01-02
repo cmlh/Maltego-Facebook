@@ -1,4 +1,4 @@
-#!/usr/bin/env perl
+#!/Users/cmlh/perl5/perlbrew/perls/perl-5.16.0/bin/perl
 # The above shebang is for "perlbrew", otherwise use /usr/bin/perl or the file path quoted for "which perl"
 #
 # Please refer to the Plain Old Documentation (POD) at the end of this Perl Script for further information
@@ -86,7 +86,8 @@ if ($http_response_ref) {
     my $facebook_affiliation_filename = $facebook_affiliation_name;
     $facebook_affiliation_filename =~ s/\s//g;
 
-    #TODO Refactor as sub() {}
+    #TODO Refactor as sub()
+    #TODO mkdir /Images/Covers if it does not exist
     if ( -e "./Images/Covers/$facebook_affiliation_filename.jpg" ) {
         open COVER_JPG, "./Images/Covers/$facebook_affiliation_filename.jpg";
         my $sha = new Digest::SHA;
