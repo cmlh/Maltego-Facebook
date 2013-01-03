@@ -3,15 +3,16 @@
 #
 # Please refer to the Plain Old Documentation (POD) at the end of this Perl Script for further information
 
-do 'facebook_graphapi.pl';
-
-# Perl v5.8 is the minimum version required for 'use autodie'
+## Perl v5.8 is the minimum version required for 'use autodie'
 # Perl v5.8.1 is the minimum version required for 'use utf8'
 use 5.0080001;
 use v5.8.1;
 
-use strict;
-use warnings qw(FATAL);
+use utf8;
+
+# use lib '[Insert CPAN Module Path]';
+# ISSUE use strict;
+use warnings FATAL;
 use diagnostics;
 
 # TODO use autodie qw(:all);
@@ -26,6 +27,8 @@ use Digest::SHA;
 # use Smart::Comments;
 
 my $VERSION = "0.0.11"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+
+do 'facebook_graphapi.pl';
 
 # Command line arguments from Maltego
 my $maltego_selected_entity_value = $ARGV[0];
