@@ -1,4 +1,4 @@
-#!/Users/cmlh/perl5/perlbrew/perls/perl-5.16.0/bin/perl
+#!/usr/bin/env perl
 # The above shebang is for "perlbrew", otherwise use /usr/bin/perl or the file path quoted for "which perl"
 #
 # Please refer to the Plain Old Documentation (POD) at the end of this Perl Script for further information
@@ -13,6 +13,9 @@ use v5.8.1;
 use strict;
 use warnings qw(FATAL);
 use diagnostics;
+
+# TODO use autodie qw(:all);
+use autodie;
 
 use JSON; # JSON v2.53
 use HTTP::Tiny;	# HTTP::Tiny v0.024
