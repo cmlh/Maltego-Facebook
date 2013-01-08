@@ -26,7 +26,7 @@ use Digest::SHA;
 # #CONFIGURATION Remove "#" for Smart::Comments
 # use Smart::Comments;
 
-my $VERSION = "0.0.11"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0.12"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 do 'facebook_graphapi.pl';
 
@@ -63,7 +63,6 @@ my $facebook_graphapi_URL =
 # TODO Replace WWW::Mechanize with LWP::UserAgent
 my $http_request = HTTP::Tiny->new;
 
-# TODO Availability of $facebook_graphapi_URL i.e. is "up" and resulting HTTP Status Code
 my $http_response = $http_request->get("$facebook_graphapi_URL");
 
 # decode_json returns a reference to a hash
@@ -86,7 +85,14 @@ facebook_graphapi_down("$facebook_graphapi_URL")
   unless $http_response->{success};
 
 my $http_response_ref = decode_json( $http_response->{content} )->{cover};
-if ($http_response_ref) {
+if ($http_response{'id'} == "0") {
+	print ("\t\t<UIMessage MessageType=\"Inform\">No Cover Picture for $facebook_affiliation_name;</UIMessage>\n");
+	print("\t</UIMessages>\n");
+	print("\t<Entities>\n");
+	print("\t\t<Entity Type=\"maltego.Image\"><Value>No Cover</Value></Entity>\n");
+} 
+
+elsif ($http_response_ref) {
 
     my %http_response                 = %$http_response_ref;
     my $facebook_affiliation_filename = $facebook_affiliation_name;
@@ -133,14 +139,6 @@ if ($http_response_ref) {
     );
     print("\t\t\t<IconURL>$http_response{'source'}</IconURL>\n");
     print("\t\t</Entity>\n");
-}
-else {
-
-    # REFACTOR as <UIMessages>
-    print STDERR ("No Facebook Cover Photo for $facebook_profileid\n");
-    print(
-        "\t\t<Entity Type=\"maltego.image\"><Value>No Cover</Value></Entity>\n"
-    );
 }
 
 # TODO Return optional error Maltego Entity.
