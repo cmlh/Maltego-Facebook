@@ -26,7 +26,10 @@ use Digest::SHA;
 # #CONFIGURATION Remove "#" for Smart::Comments
 # use Smart::Comments;
 
-my $VERSION = "0.0.12"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+# "###" is for Smart::Comments CPAN Module
+### [<now>] Commenced
+
+my $VERSION = "0.0.13"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 do 'facebook_graphapi.pl';
 
@@ -34,7 +37,7 @@ do 'facebook_graphapi.pl';
 my $maltego_selected_entity_value = $ARGV[0];
 
 # "###" is for Smart::Comments CPAN Module
-### \$maltego_selected_entity_value is: $maltego_selected_entity_value;
+### [<now>] \$maltego_selected_entity_value is: $maltego_selected_entity_value;
 
 my $maltego_additional_field_values = $ARGV[1];
 
@@ -46,6 +49,11 @@ my %maltego_additional_field_values =
 my $facebook_profileid = $maltego_additional_field_values{"uid"};
 
 my $facebook_affiliation_name = $maltego_selected_entity_value;
+
+# ISSUE If $facebook profileid is empty
+if ($facebook_profileid == 0) {
+	print STDERR "UID Field is empty of Facebook Affiliation Maltego Entity is $facebook_affiliation_name";
+}
 
 # "###" is for Smart::Comments CPAN Module
 ### \$facebook_profileid is: $facebook_profileid;
@@ -147,6 +155,8 @@ print("\t</Entities>\n");
 # http://ctas.paterva.com/view/Specification#Message_Wrapper
 print("</MaltegoTransformResponseMessage>\n");
 print("</MaltegoMessage>\n");
+
+### [<now>] Finished
 
 =head1 NAME
 
