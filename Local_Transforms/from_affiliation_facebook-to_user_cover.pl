@@ -29,7 +29,7 @@ use Digest::SHA;
 # "###" is for Smart::Comments CPAN Module
 ### [<now>] Commenced
 
-my $VERSION = "0.0.13"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0.14"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 do 'facebook_graphapi.pl';
 
@@ -50,10 +50,7 @@ my $facebook_profileid = $maltego_additional_field_values{"uid"};
 
 my $facebook_affiliation_name = $maltego_selected_entity_value;
 
-# ISSUE If $facebook profileid is empty
-if ($facebook_profileid == 0) {
-	print STDERR "UID Field is empty of Facebook Affiliation Maltego Entity is $facebook_affiliation_name";
-}
+is_facebook_profileid_empty($facebook_profileid, $facebook_affiliation_name);
 
 # "###" is for Smart::Comments CPAN Module
 ### \$facebook_profileid is: $facebook_profileid;
@@ -93,11 +90,12 @@ facebook_graphapi_down("$facebook_graphapi_URL")
   unless $http_response->{success};
 
 my $http_response_ref = decode_json( $http_response->{content} )->{cover};
+
 if ($http_response{'id'} == "0") {
-	print ("\t\t<UIMessage MessageType=\"Inform\">No Cover Picture for $facebook_affiliation_name;</UIMessage>\n");
-	print("\t</UIMessages>\n");
-	print("\t<Entities>\n");
-	print("\t\t<Entity Type=\"maltego.Image\"><Value>No Cover</Value></Entity>\n");
+ 	print ("\t\t<UIMessage MessageType=\"Inform\">No Cover Picture for $facebook_affiliation_name;</UIMessage>\n");
+ 	print("\t</UIMessages>\n");
+ 	print("\t<Entities>\n");
+ 	print("\t\t<Entity Type=\"maltego.Image\"><Value>No Cover</Value></Entity>\n");
 } 
 
 elsif ($http_response_ref) {
