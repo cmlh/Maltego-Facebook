@@ -24,12 +24,12 @@ use Data::Dumper;
 use Digest::SHA;
 
 # #CONFIGURATION Remove "#" for Smart::Comments
-# use Smart::Comments;
+use Smart::Comments;
 
 # "###" is for Smart::Comments CPAN Module
 ### [<now>] Commenced
 
-my $VERSION = "0.0.14"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0.15"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 do 'facebook_graphapi.pl';
 
@@ -37,7 +37,7 @@ do 'facebook_graphapi.pl';
 my $maltego_selected_entity_value = $ARGV[0];
 
 # "###" is for Smart::Comments CPAN Module
-### [<now>] \$maltego_selected_entity_value is: $maltego_selected_entity_value;
+### \$maltego_selected_entity_value is: $maltego_selected_entity_value;
 
 my $maltego_additional_field_values = $ARGV[1];
 
@@ -90,8 +90,9 @@ facebook_graphapi_down("$facebook_graphapi_URL")
   unless $http_response->{success};
 
 my $http_response_ref = decode_json( $http_response->{content} )->{cover};
+my %http_response                 = %$http_response_ref;
 
-if ($http_response{'id'} == "0") {
+if (!( $http_response{'source'})) {
  	print ("\t\t<UIMessage MessageType=\"Inform\">No Cover Picture for $facebook_affiliation_name;</UIMessage>\n");
  	print("\t</UIMessages>\n");
  	print("\t<Entities>\n");
@@ -100,7 +101,6 @@ if ($http_response{'id'} == "0") {
 
 elsif ($http_response_ref) {
 
-    my %http_response                 = %$http_response_ref;
     my $facebook_affiliation_filename = $facebook_affiliation_name;
     $facebook_affiliation_filename =~ s/\s//g;
 
