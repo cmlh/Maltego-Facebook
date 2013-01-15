@@ -24,7 +24,7 @@ use Data::Dumper;
 use Digest::SHA;
 
 # #CONFIGURATION Remove "#" for Smart::Comments
-use Smart::Comments;
+# use Smart::Comments;
 
 # "###" is for Smart::Comments CPAN Module
 ### [<now>] Commenced
