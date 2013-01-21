@@ -22,6 +22,7 @@ use JSON; # JSON v2.53
 use HTTP::Tiny;	# HTTP::Tiny v0.024
 use Data::Dumper;
 use Digest::SHA;
+use POSIX qw(strftime);
 
 # #CONFIGURATION Remove "#" for Smart::Comments
 # use Smart::Comments;
@@ -29,7 +30,7 @@ use Digest::SHA;
 # "###" is for Smart::Comments CPAN Module
 ### [<now>] Commenced
 
-my $VERSION = "0.0.15"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0.16"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 do 'facebook_graphapi.pl';
 
@@ -133,7 +134,8 @@ elsif ($http_response_ref) {
     );
     print("\t</UIMessages>\n");
     print("\t<Entities>\n");
-    print("\t\t<Entity Type=\"maltego.image\"><Value>$hex</Value>\n");
+    my $date = strftime("%d %b %Y", localtime(time));
+    print("\t\t<Entity Type=\"maltego.image\"><Value>Cover - $date</Value>\n");
     print("\t\t\t<AdditionalFields>\n");
     print(
         "\t\t\t\t<Field Name=\"fullimage\">$http_response{'source'}</Field>\n");
