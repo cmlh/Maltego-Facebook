@@ -30,7 +30,7 @@ use POSIX qw(strftime);
 # "###" is for Smart::Comments CPAN Module
 ### [<now>] Commenced
 
-my $VERSION = "0.0.16"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0.17"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 do 'facebook_graphapi.pl';
 
@@ -105,6 +105,8 @@ elsif ($http_response_ref) {
     my $facebook_affiliation_filename = $facebook_affiliation_name;
     $facebook_affiliation_filename =~ s/\s//g;
 
+	# Value of $new_image is 1 if prior image does not exist in /Images/Covers or SHA-1 hash is different
+	my $new_image = "0";
     #TODO Refactor as sub()
     #TODO mkdir /Images/Covers if it does not exist
     if ( -e "./Images/Covers/$facebook_affiliation_filename.jpg" ) {
@@ -120,33 +122,44 @@ elsif ($http_response_ref) {
     else {
         print
 "\t\t<UIMessage MessageType=\"Inform\">./Images/Covers/$facebook_affiliation_filename.jpg does not exist</UIMessage>\n";
+		$new_image = "1";
     }
 
     $http_request->mirror( $http_response{'source'},
-        "./Images/Covers/$facebook_affiliation_name.jpg" );
-    open COVER_JPG, "./Images/Covers/$facebook_affiliation_name.jpg";
+        "./Images/Covers/$facebook_affiliation_filename.jpg" );
+    open COVER_JPG, "./Images/Covers/$facebook_affiliation_filename.jpg";
     my $sha = new Digest::SHA;
     $sha->addfile(*COVER_JPG);
     close COVER_JPG;
     my $hex = $sha->hexdigest();
+    if ($hex eq $sha) {
+    	$new_image = "0";
+    	# "###" is for Smart::Comments CPAN Module
+		### \$hex is: $hex;
+		### \$sha is: $sha;
+    }
     print(
 "\t\t<UIMessage MessageType=\"Inform\">SHA of recent $facebook_affiliation_filename.jpg is $hex</UIMessage>\n"
     );
     print("\t</UIMessages>\n");
     print("\t<Entities>\n");
-    my $date = strftime("%d %b %Y", localtime(time));
-    print("\t\t<Entity Type=\"maltego.image\"><Value>Cover - $date</Value>\n");
-    print("\t\t\t<AdditionalFields>\n");
-    print(
-        "\t\t\t\t<Field Name=\"fullimage\">$http_response{'source'}</Field>\n");
-    print("\t\t\t</AdditionalFields>\n");
-    print("\t\t\t<IconURL>$http_response{'source'}</IconURL>\n");
-    print("\t\t</Entity>\n");
-    print(
-"\t\t<Entity Type=\"maltego.FacebookObject\"><Value>$http_response{'id'}</Value>\n"
-    );
-    print("\t\t\t<IconURL>$http_response{'source'}</IconURL>\n");
-    print("\t\t</Entity>\n");
+    if ($new_image eq "1") {
+    	# "###" is for Smart::Comments CPAN Module
+		### \$new_image is: $new_image;
+    	my $date = strftime("%d %b %Y", localtime(time));
+    	print("\t\t<Entity Type=\"maltego.image\"><Value>Cover - $date</Value>\n");
+    	print("\t\t\t<AdditionalFields>\n");
+    	print(
+        	"\t\t\t\t<Field Name=\"fullimage\">$http_response{'source'}</Field>\n");
+    	print("\t\t\t</AdditionalFields>\n");
+    	print("\t\t\t<IconURL>$http_response{'source'}</IconURL>\n");
+    	print("\t\t</Entity>\n");
+	    print(
+			"\t\t<Entity Type=\"maltego.FacebookObject\"><Value>$http_response{'id'}</Value>\n"
+    	);
+   		print("\t\t\t<IconURL>$http_response{'source'}</IconURL>\n");
+    	print("\t\t</Entity>\n");
+    }
 }
 
 # TODO Return optional error Maltego Entity.
