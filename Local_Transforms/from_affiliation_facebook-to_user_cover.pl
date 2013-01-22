@@ -30,7 +30,7 @@ use POSIX qw(strftime);
 # "###" is for Smart::Comments CPAN Module
 ### [<now>] Commenced
 
-my $VERSION = "0.0.17"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0.18"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 do 'facebook_graphapi.pl';
 
@@ -107,6 +107,7 @@ elsif ($http_response_ref) {
 
 	# Value of $new_image is 1 if prior image does not exist in /Images/Covers or SHA-1 hash is different
 	my $new_image = "0";
+	my $hex_current;
     #TODO Refactor as sub()
     #TODO mkdir /Images/Covers if it does not exist
     if ( -e "./Images/Covers/$facebook_affiliation_filename.jpg" ) {
@@ -114,10 +115,8 @@ elsif ($http_response_ref) {
         my $sha = new Digest::SHA;
         $sha->addfile(*COVER_JPG);
         close COVER_JPG;
-        my $hex = $sha->hexdigest();
-        print(
-"\t\t<UIMessage MessageType=\"Inform\">SHA of previous $facebook_affiliation_filename.jpg is $hex</UIMessage>\n"
-        );
+        $hex_current = $sha->hexdigest();
+        # print("\t\t<UIMessage MessageType=\"Inform\">SHA of previous $facebook_affiliation_filename.jpg is $hex</UIMessage>\n");
     }
     else {
         print
@@ -131,16 +130,18 @@ elsif ($http_response_ref) {
     my $sha = new Digest::SHA;
     $sha->addfile(*COVER_JPG);
     close COVER_JPG;
-    my $hex = $sha->hexdigest();
-    if ($hex eq $sha) {
+    my $hex_recent = $sha->hexdigest();
+   	# "###" is for Smart::Comments CPAN Module
+	### \$hex_recent is: $hex_recent;
+	### \$hex_current is: $hex_current;
+    if ($hex_current eq $hex_recent) {
     	$new_image = "0";
-    	# "###" is for Smart::Comments CPAN Module
-		### \$hex is: $hex;
-		### \$sha is: $sha;
-    }
-    print(
-"\t\t<UIMessage MessageType=\"Inform\">SHA of recent $facebook_affiliation_filename.jpg is $hex</UIMessage>\n"
-    );
+		print ("\t\t<UIMessage MessageType=\"Inform\">Cover Image for $facebook_affiliation_name has not changed</UIMessage>\n");
+    } 
+    else {
+    	 print ("\t\t<UIMessage MessageType=\"Inform\">Cover Image for $facebook_affiliation_name has been updated</UIMessage>\n");
+	}
+    # print("\t\t<UIMessage MessageType=\"Inform\">SHA of recent $facebook_affiliation_filename.jpg is $hex</UIMessage>\n");
     print("\t</UIMessages>\n");
     print("\t<Entities>\n");
     if ($new_image eq "1") {
