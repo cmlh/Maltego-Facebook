@@ -10,7 +10,7 @@ use HTTP::Tiny;
 # #CONFIGURATION Remove "#" for Smart::Comments
 # use Smart::Comments;
 
-my $VERSION = "0.0.3"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0.4"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 # Command line arguments from Maltego
 my $maltego_selected_entity_value = $ARGV[0];
@@ -50,7 +50,10 @@ if ($http_response_ref) {
     my %http_response = %$http_response_ref;
     if ($http_response{error}) {
     	print(
-		"\t\t<UIMessage MessageType=\"PartialError\">\"$facebook_user_id\" User ID does not exist</UIMessage>\n"
+		"\t\t<UIMessage MessageType=\"PartialError\">\"$facebook_user_id\" User ID returned an error:</UIMessage>\n"
+		);
+		print(
+		"\t\t<UIMessage MessageType=\"PartialError\">$http_response{error}->{type}: $http_response{error}->{message}</UIMessage>\n"
 		);
 		print ("</UIMessages>\n");   	
     	print("\t<Entities>\n");
