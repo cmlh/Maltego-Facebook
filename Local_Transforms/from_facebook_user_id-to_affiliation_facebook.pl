@@ -5,12 +5,12 @@
 
 use strict;
 use JSON;
-use WWW::Mechanize;
+use HTTP::Tiny;
 
 # #CONFIGURATION Remove "#" for Smart::Comments
-use Smart::Comments;
+# use Smart::Comments;
 
-my $VERSION = "0.0.1"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0.2"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 # Command line arguments from Maltego
 my $maltego_selected_entity_value = $ARGV[0];
@@ -41,17 +41,14 @@ my $facebook_graphapi_URL = "http://graph.facebook.com/$facebook_user_id";
 
 # Create a new JSON request
 
-# TODO Replace WWW::Mechanize with HTTP::Tiny CPAN Module
-# TODO Replace WWW::Mechanize with libwhisker
-# TODO Replace WWW::Mechanize with LWP::UserAgent
-my $http_request = WWW::Mechanize->new;
+my $http_request = HTTP::Tiny->new;
 
 # TODO Availability of $facebook_graphapi_URL i.e. is "up" and resulting HTTP Status Code
-my $http_response = $http_request->get("$facebook_graphapi_URL")->content;
+my $http_response = $http_request->get("$facebook_graphapi_URL");
 
 print("\t<Entities>\n");
 
-my $http_response_ref = decode_json($http_response);
+my $http_response_ref = decode_json( $http_response->{content} );
 if ($http_response_ref) {
     my %http_response = %$http_response_ref;
     print(
@@ -115,7 +112,7 @@ Returns the Facebook Affiliation Entity based on the provided (User) ID of Graph
 =head1 PREREQUISITES
 
 JSON CPAN Module
-WWW::Mechanize CPAN Module
+HTTP::Tiny CPAN Module
 
 =head1 COREQUISITES
 
