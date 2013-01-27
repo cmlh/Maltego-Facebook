@@ -10,7 +10,7 @@ use HTTP::Tiny;
 # #CONFIGURATION Remove "#" for Smart::Comments
 # use Smart::Comments;
 
-my $VERSION = "0.0.2"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0.3"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 # Command line arguments from Maltego
 my $maltego_selected_entity_value = $ARGV[0];
@@ -35,7 +35,6 @@ print("\t<UIMessages>\n");
 print(
 "\t\t<UIMessage MessageType=\"Inform\">Facebook GraphAPI Profile Cover Image Local Transform v$VERSION</UIMessage>\n"
 );
-print("\t</UIMessages>\n");
 
 my $facebook_graphapi_URL = "http://graph.facebook.com/$facebook_user_id";
 
@@ -46,29 +45,39 @@ my $http_request = HTTP::Tiny->new;
 # TODO Availability of $facebook_graphapi_URL i.e. is "up" and resulting HTTP Status Code
 my $http_response = $http_request->get("$facebook_graphapi_URL");
 
-print("\t<Entities>\n");
-
 my $http_response_ref = decode_json( $http_response->{content} );
 if ($http_response_ref) {
     my %http_response = %$http_response_ref;
-    print(
-"\t\t<Entity Type=\"maltego.FacebookObject\"><Value>$http_response{'id'}</Value></Entity>\n"
-    );
-    print(
-"\t\t<Entity Type=\"maltego.affiliation.Facebook\"><Value>$http_response{'name'}</Value>\n"
-    );
-    print("\t\t\t<AdditionalFields>\n");
+    if ($http_response{error}) {
+    	print(
+		"\t\t<UIMessage MessageType=\"PartialError\">\"$facebook_user_id\" User ID does not exist</UIMessage>\n"
+		);
+		print ("</UIMessages>\n");   	
+    	print("\t<Entities>\n");
+	} else {
+		print ("</UIMessages>\n");
+		print("\t<Entities>\n");
 
-    # ISSUE "affiliation.network" is by Default a "Read Only" field in Maltego.
-    print("\t\t\t\t<Field Name=\"affiliation.network\">Facebook</Field>\n");
-    print(
-        "\t\t\t\t<Field Name=\"affiliation.uid\">$http_response{'id'}</Field>\n"
-    );
-    print(
-"\t\t\t\t<Field Name=\"affiliation.profile-url\">http://www.facebook.com/profile.php?id=$http_response{'id'}</Field>\n"
-    );
-    print("\t\t\t</AdditionalFields>\n");
-    print("\t\t</Entity>\n");
+
+   		print(
+		"\t\t<Entity Type=\"maltego.FacebookObject\"><Value>$http_response{'id'}</Value></Entity>\n"
+ 		);
+    	print(
+		"\t\t<Entity Type=\"maltego.affiliation.Facebook\"><Value>$http_response{'name'}</Value>\n"
+ 	    );
+ 	    print("\t\t\t<AdditionalFields>\n");
+
+	    # ISSUE "affiliation.network" is by Default a "Read Only" field in Maltego.
+    	print("\t\t\t\t<Field Name=\"affiliation.network\">Facebook</Field>\n");
+    	print(
+       	 "\t\t\t\t<Field Name=\"affiliation.uid\">$http_response{'id'}</Field>\n"
+    	);
+    	print(
+		"\t\t\t\t<Field Name=\"affiliation.profile-url\">http://www.facebook.com/profile.php?id=$http_response{'id'}</Field>\n"
+   	 	);
+    	print("\t\t\t</AdditionalFields>\n");
+    	print("\t\t</Entity>\n");
+	}
 }
 else {
 
