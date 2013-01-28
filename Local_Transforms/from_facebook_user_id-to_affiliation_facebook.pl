@@ -10,7 +10,7 @@ use HTTP::Tiny;
 # #CONFIGURATION Remove "#" for Smart::Comments
 # use Smart::Comments;
 
-my $VERSION = "0.0.4"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0.5"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 # Command line arguments from Maltego
 my $maltego_selected_entity_value = $ARGV[0];
@@ -83,9 +83,7 @@ if ($http_response_ref) {
 	}
 }
 else {
-
-    # REFACTOR as <UIMessages>
-    print STDERR ("$facebook_user_id is not a Facebook User\n");
+    print STDERR ("\$http_response_ref is undef\n");
 }
 
 # TODO Return optional error Maltego Entity.
