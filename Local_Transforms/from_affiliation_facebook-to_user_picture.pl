@@ -18,7 +18,7 @@ use Digest::SHA;
 # #CONFIGURATION Remove "#" for Smart::Comments
 # use Smart::Comments;
 
-my $VERSION = "0.0.6"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0.7"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 # Command line arguments from Maltego
 my $maltego_selected_entity_value = $ARGV[0];
@@ -87,6 +87,7 @@ else {
 #TODO Refactor as sub() {}
 $http_request->mirror( $facebook_graphapi_redirect_URL,
     "./Images/Pictures/$facebook_affiliation_filename.jpg" );
+#TODO mkdir /Images/Pictures if it does not exist
 open PICTURE_JPG, "./Images/Pictures/$facebook_affiliation_filename.jpg";
 my $sha = new Digest::SHA;
 $sha->addfile(*PICTURE_JPG);
@@ -99,14 +100,14 @@ print("\t</UIMessages>\n");
 
 print("\t<Entities>\n");
 
-print("\t\t<Entity Type=\"maltego.image\"><Value>$hex</Value>\n");
+print("\t\t<Entity Type=\"maltego.image\"><Value>Picture - $hex</Value>\n");
 print("\t\t\t<AdditionalFields>\n");
 print("\t\t\t\t<Field Name=\"url\">$facebook_graphapi_redirect_URL</Field>\n");
 print("\t\t\t</AdditionalFields>\n");
 print("\t\t\t<IconURL>$facebook_graphapi_URL</IconURL>\n");
 print("\t\t</Entity>\n");
 
-print("\t\t<Entity Type=\"maltego.URL\"><Value>$hex</Value>\n");
+print("\t\t<Entity Type=\"maltego.URL\"><Value>Picture - $hex</Value>\n");
 print("\t\t\t<AdditionalFields>\n");
 print("\t\t\t\t<Field Name=\"url\">$facebook_graphapi_redirect_URL</Field>\n");
 print("\t\t\t\t<Field Name=\"title\">$facebook_affiliation_name</Field>\n");
