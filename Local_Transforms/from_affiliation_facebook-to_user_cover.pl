@@ -37,13 +37,13 @@ do 'facebook_graphapi.pl';
 # Command line arguments from Maltego
 my $maltego_selected_entity_value = $ARGV[0];
 
-# "###" is for Smart::Comments CPAN Module
-### \$maltego_selected_entity_value is: $maltego_selected_entity_value;
+# "####" is for Smart::Comments CPAN Module
+#### \$maltego_selected_entity_value is: $maltego_selected_entity_value;
 
 my $maltego_additional_field_values = $ARGV[1];
 
-# "###" is for Smart::Comments CPAN Module
-### \$maltego_additional_field_values is: $maltego_additional_field_values;
+# "####" is for Smart::Comments CPAN Module
+#### \$maltego_additional_field_values is: $maltego_additional_field_values;
 
 my %maltego_additional_field_values =
   split_maltego_additional_fields($maltego_additional_field_values);
