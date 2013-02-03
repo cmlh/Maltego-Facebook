@@ -30,7 +30,7 @@ use POSIX qw(strftime);
 # "###" is for Smart::Comments CPAN Module
 ### [<now>] Commenced
 
-my $VERSION = "0.0.18"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0.19"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 do 'facebook_graphapi.pl';
 
@@ -141,6 +141,11 @@ elsif ($http_response_ref) {
     else {
     	 print ("\t\t<UIMessage MessageType=\"Inform\">Cover Image for $facebook_affiliation_name has been updated</UIMessage>\n");
 	}
+	# Refer to "man git-rev-parse" -short for length of four
+	# Also, since the end user might not have the image on first execution it is not possible to generate the git hash as the blob is unknown.
+	my $shortern_hash = substr($hex_recent, 0, 4);
+	# "###" is for Smart::Comments CPAN Module
+	### \$shortern_hash is: $shortern_hash;
     # print("\t\t<UIMessage MessageType=\"Inform\">SHA of recent $facebook_affiliation_filename.jpg is $hex</UIMessage>\n");
     print("\t</UIMessages>\n");
     print("\t<Entities>\n");
@@ -148,12 +153,12 @@ elsif ($http_response_ref) {
     	# "###" is for Smart::Comments CPAN Module
 		### \$new_image is: $new_image;
     	my $date = strftime("%d %b %Y", localtime(time));
-    	print("\t\t<Entity Type=\"maltego.image\"><Value>Cover - $date</Value>\n");
+    	print("\t\t<Entity Type=\"maltego.image\"><Value>Cover - $shortern_hash</Value>\n");
     	print("\t\t\t<AdditionalFields>\n");
     	print(
         	"\t\t\t\t<Field Name=\"fullimage\">$http_response{'source'}</Field>\n");
     	print("\t\t\t</AdditionalFields>\n");
-    	print("\t\t\t<IconURL>$http_response{'source'}</IconURL>\n");
+    	print("\t\t\t\t<IconURL>$http_response{'source'}</IconURL>\n");
     	print("\t\t</Entity>\n");
 	    print(
 			"\t\t<Entity Type=\"maltego.FacebookObject\"><Value>$http_response{'id'}</Value>\n"
