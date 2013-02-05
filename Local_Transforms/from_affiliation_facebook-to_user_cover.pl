@@ -152,11 +152,12 @@ elsif ($http_response_ref) {
     if ($new_image eq "1") {
     	# "###" is for Smart::Comments CPAN Module
 		### \$new_image is: $new_image;
-    	my $date = strftime("%d %b %Y", localtime(time));
     	print("\t\t<Entity Type=\"maltego.image\"><Value>Cover - $shortern_hash</Value>\n");
     	print("\t\t\t<AdditionalFields>\n");
     	print(
         	"\t\t\t\t<Field Name=\"fullimage\">$http_response{'source'}</Field>\n");
+        	my $date = strftime("%d %b %Y at %H:%M:%S", localtime(time));
+        	print("\t\t\t\t<Field Name=\'notes#\'>Discovered on $date</Field>\n");
     	print("\t\t\t</AdditionalFields>\n");
     	print("\t\t\t\t<IconURL>$http_response{'source'}</IconURL>\n");
     	print("\t\t</Entity>\n");
