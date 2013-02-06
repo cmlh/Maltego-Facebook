@@ -18,7 +18,7 @@ use Digest::SHA;
 # #CONFIGURATION Remove "#" for Smart::Comments
 # use Smart::Comments;
 
-my $VERSION = "0.0.7"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0_8"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 # Command line arguments from Maltego
 my $maltego_selected_entity_value = $ARGV[0];
@@ -47,7 +47,7 @@ print(
 "\t\t<UIMessage MessageType=\"Inform\">Facebook GraphAPI Profile Cover Image Local Transform v$VERSION</UIMessage>\n"
 );
 
-# TODO ?types=small,normal, square
+# TODO ?types=small,normal,square,large
 my $facebook_graphapi_URL =
   "https://graph.facebook.com/$facebook_profileid/picture?type=large";
 
@@ -99,15 +99,15 @@ print(
 print("\t</UIMessages>\n");
 
 print("\t<Entities>\n");
-
-print("\t\t<Entity Type=\"maltego.image\"><Value>Picture - $hex</Value>\n");
+my $shortern_hash = substr($hex, 0, 4);
+print("\t\t<Entity Type=\"maltego.image\"><Value>Picture - $shortern_hash</Value>\n");
 print("\t\t\t<AdditionalFields>\n");
 print("\t\t\t\t<Field Name=\"url\">$facebook_graphapi_redirect_URL</Field>\n");
 print("\t\t\t</AdditionalFields>\n");
 print("\t\t\t<IconURL>$facebook_graphapi_URL</IconURL>\n");
 print("\t\t</Entity>\n");
 
-print("\t\t<Entity Type=\"maltego.URL\"><Value>Picture - $hex</Value>\n");
+print("\t\t<Entity Type=\"maltego.URL\"><Value>Picture - $shortern_hash</Value>\n");
 print("\t\t\t<AdditionalFields>\n");
 print("\t\t\t\t<Field Name=\"url\">$facebook_graphapi_redirect_URL</Field>\n");
 print("\t\t\t\t<Field Name=\"title\">$facebook_affiliation_name</Field>\n");
