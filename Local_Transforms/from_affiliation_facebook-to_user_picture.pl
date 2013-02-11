@@ -3,10 +3,20 @@
 #
 # Please refer to the Plain Old Documentation (POD) at the end of this Perl Script for further information
 
-#TODO Refactor as module
-do 'facebook_graphapi.pl';
+## Perl v5.8 is the minimum version required for 'use autodie'
+# Perl v5.8.1 is the minimum version required for 'use utf8'
+use 5.0080001;
+use v5.8.1;
 
+use utf8;
+
+# use lib '[Insert CPAN Module Path]';
 use strict;
+use warnings 'FATAL';
+use diagnostics;
+
+# TODO use autodie qw(:all);
+use autodie;
 
 # use warnings;
 # ISSUE WONTFIX HTTP::Tiny does not support returning the redirected URL i.e. ->request->uri->as_string
@@ -14,11 +24,15 @@ use LWP::UserAgent;
 use URI;
 use Data::Dumper;
 use Digest::SHA;
+use POSIX qw(strftime);
 
 # #CONFIGURATION Remove "#" for Smart::Comments
 # use Smart::Comments;
 
-my $VERSION = "0.0_8"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+#TODO Refactor as module
+do 'facebook_graphapi.pl';
+
+my $VERSION = "0.0_9"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 # Command line arguments from Maltego
 my $maltego_selected_entity_value = $ARGV[0];
@@ -100,9 +114,11 @@ print("\t</UIMessages>\n");
 
 print("\t<Entities>\n");
 my $shortern_hash = substr($hex, 0, 4);
-print("\t\t<Entity Type=\"maltego.image\"><Value>Picture - $shortern_hash</Value>\n");
+print("\t\t<Entity Type=\"maltego.Image\"><Value>Picture - $shortern_hash</Value>\n");
 print("\t\t\t<AdditionalFields>\n");
 print("\t\t\t\t<Field Name=\"url\">$facebook_graphapi_redirect_URL</Field>\n");
+my $date = strftime("%d %b %Y at %H:%M:%S", localtime(time));
+print("\t\t\t\t<Field Name=\'notes#\'>Discovered on $date</Field>\n");
 print("\t\t\t</AdditionalFields>\n");
 print("\t\t\t<IconURL>$facebook_graphapi_URL</IconURL>\n");
 print("\t\t</Entity>\n");
@@ -111,6 +127,8 @@ print("\t\t<Entity Type=\"maltego.URL\"><Value>Picture - $shortern_hash</Value>\
 print("\t\t\t<AdditionalFields>\n");
 print("\t\t\t\t<Field Name=\"url\">$facebook_graphapi_redirect_URL</Field>\n");
 print("\t\t\t\t<Field Name=\"title\">$facebook_affiliation_name</Field>\n");
+my $date = strftime("%d %b %Y at %H:%M:%S", localtime(time));
+print("\t\t\t\t<Field Name=\'notes#\'>Discovered on $date</Field>\n");
 print("\t\t\t</AdditionalFields>\n");
 print("\t\t\t<IconURL>$facebook_graphapi_redirect_URL</IconURL>\n");
 print("\t\t</Entity>\n");
