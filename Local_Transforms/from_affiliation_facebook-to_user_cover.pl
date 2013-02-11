@@ -164,6 +164,12 @@ elsif ($http_response_ref) {
 	    print(
 			"\t\t<Entity Type=\"maltego.FacebookObject\"><Value>$http_response{'id'}</Value>\n"
     	);
+    	print("\t\t\t<AdditionalFields>\n");
+    	print(
+        	"\t\t\t\t<Field Name=\"fullimage\">$http_response{'source'}</Field>\n");
+        	my $date = strftime("%d %b %Y at %H:%M:%S", localtime(time));
+        	print("\t\t\t\t<Field Name=\'notes#\'>Discovered on $date</Field>\n");
+    	print("\t\t\t</AdditionalFields>\n");
    		print("\t\t\t<IconURL>$http_response{'source'}</IconURL>\n");
     	print("\t\t</Entity>\n");
     }
