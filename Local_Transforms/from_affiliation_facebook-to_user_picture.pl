@@ -32,7 +32,7 @@ use POSIX qw(strftime);
 #TODO Refactor as module
 do 'facebook_graphapi.pl';
 
-my $VERSION = "0.0_10"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0_11"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 # Command line arguments from Maltego
 my $maltego_selected_entity_value = $ARGV[0];
@@ -99,6 +99,8 @@ else {
 }
 
 #TODO Refactor as sub() {}
+#TODO Refactor as File::Copy qw(move);
+unlink ("./Images/Pictures/$facebook_affiliation_filename.jpg");
 $http_request->mirror( $facebook_graphapi_redirect_URL,
     "./Images/Pictures/$facebook_affiliation_filename.jpg" );
 #TODO mkdir /Images/Pictures if it does not exist
