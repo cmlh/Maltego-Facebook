@@ -20,7 +20,7 @@ use autodie;
 
 # use warnings;
 # ISSUE WONTFIX HTTP::Tiny does not support returning the redirected URL i.e. ->request->uri->as_string
-use LWP::UserAgent;
+use HTTP::Tiny;
 use URI;
 use Data::Dumper;
 use Digest::SHA;
@@ -32,7 +32,7 @@ use POSIX qw(strftime);
 #TODO Refactor as module
 do 'facebook_graphapi.pl';
 
-my $VERSION = "0.0_9"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0_10"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 # Command line arguments from Maltego
 my $maltego_selected_entity_value = $ARGV[0];
@@ -67,12 +67,12 @@ my $facebook_graphapi_URL =
 
 # TODO Replace LWP with WWW::Mechanize CPAN Module
 # TODO Replace LWP with libwhisker
-my $http_request = LWP::UserAgent->new;
+my $http_request = HTTP::Tiny->new;
 $http_request->agent('Mozilla/5.0');
 
 # TODO Availability of $facebook_graphapi_URL i.e. is "up" and resulting HTTP Status Code
 my $http_response = $http_request->head($facebook_graphapi_URL);
-my $facebook_graphapi_redirect_URL = $http_response->request->uri->as_string;
+my $facebook_graphapi_redirect_URL = $http_response->{url};
 
 # "###" is for Smart::Comments CPAN Module
 ### \$facebook_graphapi_redirect_URL is: $facebook_graphapi_redirect_URL;
