@@ -95,6 +95,7 @@ if ( -e "./Images/Pictures/$facebook_affiliation_filename.jpg" ) {
     print(
 "\t\t<UIMessage MessageType=\"Inform\">SHA of previous $facebook_affiliation_filename.jpg is $hex</UIMessage>\n"
     );
+    unlink ("./Images/Pictures/$facebook_affiliation_filename.jpg");
 }
 else {
     print
@@ -103,7 +104,7 @@ else {
 
 #TODO Refactor as sub() {}
 #TODO Refactor as File::Copy qw(move);
-unlink ("./Images/Pictures/$facebook_affiliation_filename.jpg");
+
 $http_request->mirror( $facebook_graphapi_redirect_URL,
     "./Images/Pictures/$facebook_affiliation_filename.jpg" );
 #TODO mkdir /Images/Pictures if it does not exist
@@ -125,7 +126,7 @@ print("\t\t\t\t<Field Name=\"url\">$facebook_graphapi_redirect_URL</Field>\n");
 my $date = strftime("%d %b %Y at %H:%M:%S", localtime(time));
 print("\t\t\t\t<Field Name=\'notes#\'>Discovered on $date</Field>\n");
 print("\t\t\t</AdditionalFields>\n");
-print("\t\t\t<IconURL>$facebook_graphapi_URL</IconURL>\n");
+print("\t\t\t<IconURL>$facebook_graphapi_redirect_URL</IconURL>\n");
 print("\t\t</Entity>\n");
 
 print("\t\t<Entity Type=\"maltego.URL\"><Value>Picture - $shortern_hash</Value>\n");
