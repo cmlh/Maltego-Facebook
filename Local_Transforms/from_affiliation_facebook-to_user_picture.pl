@@ -20,7 +20,7 @@ use autodie;
 
 # use warnings;
 # ISSUE WONTFIX HTTP::Tiny does not support returning the redirected URL i.e. ->request->uri->as_string
-use HTTP::Tiny;
+use HTTP::Tiny; # HTTP::Tiny v0.024
 use URI;
 use Data::Dumper;
 use Digest::SHA;
@@ -29,10 +29,13 @@ use POSIX qw(strftime);
 # #CONFIGURATION Remove "#" for Smart::Comments
 # use Smart::Comments;
 
+# "###" is for Smart::Comments CPAN Module
+### [<now>] Commenced
+
+my $VERSION = "0.0_12"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+
 #TODO Refactor as module
 do 'facebook_graphapi.pl';
-
-my $VERSION = "0.0_11"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 # Command line arguments from Maltego
 my $maltego_selected_entity_value = $ARGV[0];
