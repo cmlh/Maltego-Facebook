@@ -32,7 +32,7 @@ use POSIX qw(strftime);
 # "###" is for Smart::Comments CPAN Module
 ### [<now>] Commenced
 
-my $VERSION = "0.0_12"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0_13"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 #TODO Refactor as module
 do 'facebook_graphapi.pl';
@@ -145,6 +145,8 @@ print("\t</Entities>\n");
 # http://ctas.paterva.com/view/Specification#Message_Wrapper
 print("</MaltegoTransformResponseMessage>\n");
 print("</MaltegoMessage>\n");
+
+### [<now>] Finished
 
 =head1 NAME
 
