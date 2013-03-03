@@ -123,7 +123,7 @@ elsif ($http_response_ref) {
 "\t\t<UIMessage MessageType=\"Inform\">./Images/Covers/$facebook_affiliation_filename.jpg does not exist</UIMessage>\n";
 		$new_image = "1";
     }
-
+	unlink ("./Images/Pictures/$facebook_affiliation_filename.jpg");
     $http_request->mirror( $http_response{'source'},
         "./Images/Covers/$facebook_affiliation_filename.jpg" );
     open COVER_JPG, "./Images/Covers/$facebook_affiliation_filename.jpg";
