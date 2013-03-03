@@ -12,7 +12,7 @@ use utf8;
 
 # use lib '[Insert CPAN Module Path]';
 # ISSUE use strict;
-use warnings FATAL;
+use warnings 'FATAL';
 use diagnostics;
 
 # TODO use autodie qw(:all);
@@ -30,7 +30,7 @@ use POSIX qw(strftime);
 # "###" is for Smart::Comments CPAN Module
 ### [<now>] Commenced
 
-my $VERSION = "0.0.19"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0_19"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 do 'facebook_graphapi.pl';
 
