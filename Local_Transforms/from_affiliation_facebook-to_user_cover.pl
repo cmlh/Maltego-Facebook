@@ -30,7 +30,7 @@ use POSIX qw(strftime);
 # "###" is for Smart::Comments CPAN Module
 ### [<now>] Commenced
 
-my $VERSION = "0.0_19"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0_20"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 do 'facebook_graphapi.pl';
 
@@ -107,7 +107,7 @@ elsif ($http_response_ref) {
 
 	# Value of $new_image is 1 if prior image does not exist in /Images/Covers or SHA-1 hash is different
 	my $new_image = "0";
-	my $hex_current;
+	my $hex_previous;
     #TODO Refactor as sub()
     #TODO mkdir /Images/Covers if it does not exist
     if ( -e "./Images/Covers/$facebook_affiliation_filename.jpg" ) {
@@ -115,15 +115,16 @@ elsif ($http_response_ref) {
         my $sha = new Digest::SHA;
         $sha->addfile(*COVER_JPG);
         close COVER_JPG;
-        $hex_current = $sha->hexdigest();
-        # print("\t\t<UIMessage MessageType=\"Inform\">SHA of previous $facebook_affiliation_filename.jpg is $hex</UIMessage>\n");
+        $hex_previous = $sha->hexdigest();
+        print("\t\t<UIMessage MessageType=\"Inform\">SHA of previous $facebook_affiliation_filename.jpg is $hex_previous</UIMessage>\n");
+        unlink ("./Images/Covers/$facebook_affiliation_filename.jpg");
     }
     else {
         print
 "\t\t<UIMessage MessageType=\"Inform\">./Images/Covers/$facebook_affiliation_filename.jpg does not exist</UIMessage>\n";
 		$new_image = "1";
     }
-	unlink ("./Images/Pictures/$facebook_affiliation_filename.jpg");
+	
     $http_request->mirror( $http_response{'source'},
         "./Images/Covers/$facebook_affiliation_filename.jpg" );
     open COVER_JPG, "./Images/Covers/$facebook_affiliation_filename.jpg";
@@ -134,7 +135,7 @@ elsif ($http_response_ref) {
    	# "###" is for Smart::Comments CPAN Module
 	### \$hex_recent is: $hex_recent;
 	### \$hex_current is: $hex_current;
-    if ($hex_current eq $hex_recent) {
+    if ($hex_previous eq $hex_recent) {
     	$new_image = "0";
 		print ("\t\t<UIMessage MessageType=\"Inform\">Cover Image for $facebook_affiliation_name has not changed</UIMessage>\n");
     } 
@@ -162,7 +163,7 @@ elsif ($http_response_ref) {
     	print("\t\t\t\t<IconURL>$http_response{'source'}</IconURL>\n");
     	print("\t\t</Entity>\n");
 	    print(
-			"\t\t<Entity Type=\"maltego.FacebookObject\"><Value>$http_response{'id'}</Value>\n"
+			"\t\t<Entity Type=\"maltego.FacebookObject\"><Value>Cover - $shortern_hash</Value>\n"
     	);
     	print("\t\t\t<AdditionalFields>\n");
     	print(
