@@ -1,4 +1,4 @@
-#!/usr/bin/env perl
+#!/Users/cmlh/perl5/perlbrew/perls/perl-5.16.0/bin/perl
 # The above shebang is for "perlbrew", otherwise use /usr/bin/perl or the file path quoted for "which perl"
 #
 # Please refer to the Plain Old Documentation (POD) at the end of this Perl Script for further information
@@ -52,6 +52,8 @@ my $facebook_profileid = $maltego_additional_field_values{"uid"};
 
 my $facebook_affiliation_name = $maltego_selected_entity_value;
 
+is_facebook_profileid_empty($facebook_profileid, $facebook_affiliation_name);
+
 # "###" is for Smart::Comments CPAN Module
 ### \$facebook_profileid is: $facebook_profileid;
 
@@ -66,12 +68,12 @@ print(
 my $facebook_graphapi_URL =
   "https://graph.facebook.com/$facebook_profileid/picture?type=large";
 
-# TODO Replace LWP with WWW::Mechanize CPAN Module
-# TODO Replace LWP with libwhisker
 my $http_request = HTTP::Tiny->new;
 $http_request->agent('Mozilla/5.0');
 
-# TODO Availability of $facebook_graphapi_URL i.e. is "up" and resulting HTTP Status Code
+facebook_graphapi_down("$facebook_graphapi_URL")
+  unless $http_response->{success};
+
 my $http_response = $http_request->head($facebook_graphapi_URL);
 my $facebook_graphapi_redirect_URL = $http_response->{url};
 

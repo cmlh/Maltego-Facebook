@@ -1,4 +1,4 @@
-#!/usr/bin/env perl
+#!/Users/cmlh/perl5/perlbrew/perls/perl-5.16.0/bin/perl
 # The above shebang is for "perlbrew", otherwise use /usr/bin/perl or the file path quoted for "which perl"
 #
 # Please refer to the Plain Old Documentation (POD) at the end of this Perl Script for further information
@@ -49,7 +49,6 @@ my $maltego_additional_field_values = $ARGV[1];
 my %maltego_additional_field_values =
   split_maltego_additional_fields($maltego_additional_field_values);
 my $facebook_profileid = $maltego_additional_field_values{"uid"};
-
 my $facebook_affiliation_name = $maltego_selected_entity_value;
 
 is_facebook_profileid_empty($facebook_profileid, $facebook_affiliation_name);
@@ -66,6 +65,7 @@ my $facebook_graphapi_URL =
 # Create a new JSON request
 
 my $http_request = HTTP::Tiny->new;
+$http_request->agent('Mozilla/5.0');
 
 my $http_response = $http_request->get("$facebook_graphapi_URL");
 
@@ -245,7 +245,7 @@ http://cmlh.id.au/contact
 
 =head1 REPOSITORY
 
-http://github.com/cmlh/Maltego-Facebook
+http://github.com/cmlh/
 
 =head1 FURTHER INFORMATION AND UPDATES
 
