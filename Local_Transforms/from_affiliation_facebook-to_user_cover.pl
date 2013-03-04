@@ -1,4 +1,4 @@
-#!/Users/cmlh/perl5/perlbrew/perls/perl-5.16.0/bin/perl
+#!/usr/bin/env perl
 # The above shebang is for "perlbrew", otherwise use /usr/bin/perl or the file path quoted for "which perl"
 #
 # Please refer to the Plain Old Documentation (POD) at the end of this Perl Script for further information
@@ -25,12 +25,12 @@ use Digest::SHA;
 use POSIX qw(strftime);
 
 # #CONFIGURATION Remove "#" for Smart::Comments
-# use Smart::Comments;
+# use Smart::Comments '###', '####', '#####';
 
 # "#####" is for Smart::Comments CPAN Module
 ##### [<now>] Commenced
 
-my $VERSION = "0.0_21"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0_22"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 #TODO Refactor facebook_graphapi.pl as a module
 do 'facebook_graphapi.pl';
@@ -81,17 +81,20 @@ my $http_response = $http_request->get("$facebook_graphapi_URL");
 print("<MaltegoMessage>\n");
 print("<MaltegoTransformResponseMessage>\n");
 print("\t<UIMessages>\n");
-print(
-"\t\t<UIMessage MessageType=\"Inform\">Facebook GraphAPI Profile Cover Image Local Transform v$VERSION</UIMessage>\n"
-);
 
 facebook_graphapi_down("$facebook_graphapi_URL")
   unless $http_response->{success};
 
-my $http_response_ref = decode_json( $http_response->{content} )->{cover};
+print(
+"\t\t<UIMessage MessageType=\"Inform\">Facebook GraphAPI Profile Cover Image Local Transform v$VERSION</UIMessage>\n"
+);
+
+
+
+my $http_response_ref = decode_json( $http_response->{content} );
 my %http_response                 = %$http_response_ref;
 
-if (!( $http_response{'source'})) {
+if (!( $http_response{'cover'}{'source'})) {
  	print ("\t\t<UIMessage MessageType=\"Inform\">No Cover Picture for $facebook_affiliation_name;</UIMessage>\n");
  	print("\t</UIMessages>\n");
  	print("\t<Entities>\n");
@@ -123,7 +126,7 @@ elsif ($http_response_ref) {
 		$new_image = "1";
     }
 	
-    $http_request->mirror( $http_response{'source'},
+    $http_request->mirror( $http_response{'cover'}{'source'},
         "./Images/Covers/$facebook_affiliation_filename.jpg" );
     open COVER_JPG, "./Images/Covers/$facebook_affiliation_filename.jpg";
     my $sha = new Digest::SHA;
@@ -132,7 +135,7 @@ elsif ($http_response_ref) {
     my $hex_recent = $sha->hexdigest();
    	# "###" is for Smart::Comments CPAN Module
 	### \$hex_recent is: $hex_recent;
-	### \$hex_current is: $hex_current;
+	### \$hex_current is: $hex_previous;
     if ($hex_previous eq $hex_recent) {
     	$new_image = "0";
 		print ("\t\t<UIMessage MessageType=\"Inform\">Cover Image for $facebook_affiliation_name has not changed</UIMessage>\n");
