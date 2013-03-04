@@ -18,35 +18,33 @@ use diagnostics;
 # TODO use autodie qw(:all);
 use autodie;
 
-# use warnings;
-# ISSUE WONTFIX HTTP::Tiny does not support returning the redirected URL i.e. ->request->uri->as_string
 use HTTP::Tiny; # HTTP::Tiny v0.024
 use URI;
-use Data::Dumper;
+# use Data::Dumper;
 use Digest::SHA;
 use POSIX qw(strftime);
 
 # #CONFIGURATION Remove "#" for Smart::Comments
 # use Smart::Comments;
 
-# "###" is for Smart::Comments CPAN Module
-### [<now>] Commenced
+# "#####" is for Smart::Comments CPAN Module
+##### [<now>] Commenced
 
 my $VERSION = "0.0_13"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
-#TODO Refactor as module
+#TODO Refactor facebook_graphapi.pl as a module
 do 'facebook_graphapi.pl';
 
 # Command line arguments from Maltego
 my $maltego_selected_entity_value = $ARGV[0];
 
-# "###" is for Smart::Comments CPAN Module
-### \$maltego_selected_entity_value is: $maltego_selected_entity_value;
+# "####" is for Smart::Comments CPAN Module
+#### \$maltego_selected_entity_value is: $maltego_selected_entity_value;
 
 my $maltego_additional_field_values = $ARGV[1];
 
-# "###" is for Smart::Comments CPAN Module
-### \$maltego_additional_field_values is: $maltego_additional_field_values;
+# "####" is for Smart::Comments CPAN Module
+#### \$maltego_additional_field_values is: $maltego_additional_field_values;
 
 my %maltego_additional_field_values =
   split_maltego_additional_fields($maltego_additional_field_values);
@@ -146,7 +144,8 @@ print("\t</Entities>\n");
 print("</MaltegoTransformResponseMessage>\n");
 print("</MaltegoMessage>\n");
 
-### [<now>] Finished
+# "#####" is for Smart::Comments CPAN Module
+##### [<now>] Finished
 
 =head1 NAME
 
@@ -176,7 +175,7 @@ Returns the Image, URL and its Facebook Object in Maltego via the Facebook Graph
 
 =head1 PREREQUISITES
 
-LWP::UserAgent
+HTTP::Tiny
 URI
 
 =head1 COREQUISITES
@@ -229,6 +228,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License. 
 
-Copyright 2012 Christian Heinrich
+Copyright 2012, 2013 Christian Heinrich
 
 

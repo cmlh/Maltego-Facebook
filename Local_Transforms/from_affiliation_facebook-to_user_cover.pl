@@ -20,18 +20,19 @@ use autodie;
 
 use JSON; # JSON v2.53
 use HTTP::Tiny;	# HTTP::Tiny v0.024
-use Data::Dumper;
+# use Data::Dumper;
 use Digest::SHA;
 use POSIX qw(strftime);
 
 # #CONFIGURATION Remove "#" for Smart::Comments
 # use Smart::Comments;
 
-# "###" is for Smart::Comments CPAN Module
-### [<now>] Commenced
+# "#####" is for Smart::Comments CPAN Module
+##### [<now>] Commenced
 
 my $VERSION = "0.0_21"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
+#TODO Refactor facebook_graphapi.pl as a module
 do 'facebook_graphapi.pl';
 
 # Command line arguments from Maltego
@@ -64,9 +65,6 @@ my $facebook_graphapi_URL =
 
 # Create a new JSON request
 
-# TODO Replace WWW::Mechanize with HTTP::Tiny CPAN Module
-# TODO Replace WWW::Mechanize with libwhisker
-# TODO Replace WWW::Mechanize with LWP::UserAgent
 my $http_request = HTTP::Tiny->new;
 
 my $http_response = $http_request->get("$facebook_graphapi_URL");
@@ -183,7 +181,7 @@ print("\t</Entities>\n");
 print("</MaltegoTransformResponseMessage>\n");
 print("</MaltegoMessage>\n");
 
-### [<now>] Finished
+##### [<now>] Finished
 
 =head1 NAME
 
@@ -214,7 +212,7 @@ Returns the Facebook Cover Image and its ID in Maltego via the Facebook GraphAPI
 =head1 PREREQUISITES
 
 JSON CPAN Module
-WWW::Mechanize CPAN Module
+HTTP::Tiny CPAN Module
 Digest::SHA CPAN Module
 
 =head1 COREQUISITES
@@ -267,6 +265,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License. 
 
-Copyright 2012 Christian Heinrich
+Copyright 2012, 2013 Christian Heinrich
 
 
