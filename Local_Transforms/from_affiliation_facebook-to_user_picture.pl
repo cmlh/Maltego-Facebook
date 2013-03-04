@@ -1,4 +1,4 @@
-#!/Users/cmlh/perl5/perlbrew/perls/perl-5.16.0/bin/perl
+#!/usr/bin/env perl
 # The above shebang is for "perlbrew", otherwise use /usr/bin/perl or the file path quoted for "which perl"
 #
 # Please refer to the Plain Old Documentation (POD) at the end of this Perl Script for further information
@@ -25,7 +25,7 @@ use Digest::SHA;
 use POSIX qw(strftime);
 
 # #CONFIGURATION Remove "#" for Smart::Comments
-# use Smart::Comments;
+use Smart::Comments '###', '####', '#####';
 
 # "#####" is for Smart::Comments CPAN Module
 ##### [<now>] Commenced
@@ -52,17 +52,11 @@ my $facebook_profileid = $maltego_additional_field_values{"uid"};
 
 my $facebook_affiliation_name = $maltego_selected_entity_value;
 
-is_facebook_profileid_empty($facebook_profileid, $facebook_affiliation_name);
-
 # "###" is for Smart::Comments CPAN Module
 ### \$facebook_profileid is: $facebook_profileid;
 
-print("<MaltegoMessage>\n");
-print("<MaltegoTransformResponseMessage>\n");
-print("\t<UIMessages>\n");
-print(
-"\t\t<UIMessage MessageType=\"Inform\">Facebook GraphAPI Profile Cover Image Local Transform v$VERSION</UIMessage>\n"
-);
+is_facebook_profileid_empty($facebook_profileid, $facebook_affiliation_name);
+
 
 # TODO ?types=small,normal,square,large
 my $facebook_graphapi_URL =
@@ -71,11 +65,20 @@ my $facebook_graphapi_URL =
 my $http_request = HTTP::Tiny->new;
 $http_request->agent('Mozilla/5.0');
 
+my $http_response = $http_request->head($facebook_graphapi_URL);
+my $facebook_graphapi_redirect_URL = $http_response->{url};
+
 facebook_graphapi_down("$facebook_graphapi_URL")
   unless $http_response->{success};
 
-my $http_response = $http_request->head($facebook_graphapi_URL);
-my $facebook_graphapi_redirect_URL = $http_response->{url};
+print("<MaltegoMessage>\n");
+print("<MaltegoTransformResponseMessage>\n");
+print("\t<UIMessages>\n");
+print(
+"\t\t<UIMessage MessageType=\"Inform\">Facebook GraphAPI Profile Cover Image Local Transform v$VERSION</UIMessage>\n"
+);
+
+
 
 # "###" is for Smart::Comments CPAN Module
 ### \$facebook_graphapi_redirect_URL is: $facebook_graphapi_redirect_URL;
