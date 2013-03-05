@@ -25,12 +25,12 @@ use Digest::SHA;
 use POSIX qw(strftime);
 
 # #CONFIGURATION Remove "#" for Smart::Comments
-use Smart::Comments '###', '####', '#####';
+# use Smart::Comments '###', '####', '#####';
 
 # "#####" is for Smart::Comments CPAN Module
 ##### [<now>] Commenced
 
-my $VERSION = "0.0_13"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0_15"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 #TODO Refactor facebook_graphapi.pl as a module
 do 'facebook_graphapi.pl';
