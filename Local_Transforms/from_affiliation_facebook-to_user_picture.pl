@@ -55,7 +55,7 @@ my $facebook_affiliation_name = $maltego_selected_entity_value;
 # "###" is for Smart::Comments CPAN Module
 ### \$facebook_profileid is: $facebook_profileid;
 
-is_facebook_profileid_empty($facebook_profileid, $facebook_affiliation_name);
+is_facebook_profileid_empty($facebook_profileid, $facebook_affiliation_name, $VERSION);
 
 
 # TODO ?types=small,normal,square,large
@@ -68,7 +68,7 @@ $http_request->agent('Mozilla/5.0');
 my $http_response = $http_request->head($facebook_graphapi_URL);
 my $facebook_graphapi_redirect_URL = $http_response->{url};
 
-facebook_graphapi_down("$facebook_graphapi_URL")
+facebook_graphapi_down("$facebook_graphapi_URL", $VERSION)
   unless $http_response->{success};
 
 print("<MaltegoMessage>\n");

@@ -51,7 +51,7 @@ my %maltego_additional_field_values =
 my $facebook_profileid = $maltego_additional_field_values{"uid"};
 my $facebook_affiliation_name = $maltego_selected_entity_value;
 
-is_facebook_profileid_empty($facebook_profileid, $facebook_affiliation_name);
+is_facebook_profileid_empty($facebook_profileid, $facebook_affiliation_name, $VERSION);
 
 # "###" is for Smart::Comments CPAN Module
 ### \$facebook_profileid is: $facebook_profileid;
@@ -78,7 +78,7 @@ my $http_response = $http_request->get("$facebook_graphapi_URL");
 # print DEBUG_LOG ( Data::Dumper::Dumper( decode_json($http_response) ) );
 # close DEBUG_LOG;
 
-facebook_graphapi_down("$facebook_graphapi_URL")
+facebook_graphapi_down("$facebook_graphapi_URL", $VERSION)
   unless $http_response->{success};
 
 print("<MaltegoMessage>\n");
