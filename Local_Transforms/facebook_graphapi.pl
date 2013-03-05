@@ -44,12 +44,13 @@ sub is_facebook_profileid_empty {
 
 sub facebook_graphapi_down {
     $facebook_graphapi_URL = $_[0];
+    $transform_version = $_[1];
     print("<MaltegoMessage>\n");
 	print("<MaltegoTransformResponseMessage>\n");
 	print("\t<UIMessages>\n");
 	# ISSUE Reflect the value of $VERSION from calling main()
 	print(
-	"\t\t<UIMessage MessageType=\"Inform\">Facebook GraphAPI Profile Cover Image Local Transform v$VERSION</UIMessage>\n"
+	"\t\t<UIMessage MessageType=\"Inform\">Facebook GraphAPI Profile Cover Image Local Transform v$transform_version</UIMessage>\n"
 	);
     print(
 	"\t\t<UIMessage MessageType=\"FatalError\">Cannot connect to $facebook_graphapi_URL</UIMessage>\n"
