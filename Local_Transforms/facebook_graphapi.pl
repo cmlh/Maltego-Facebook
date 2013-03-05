@@ -2,7 +2,7 @@
 #
 # Please refer to the Plain Old Documentation (POD) at the end of this Perl Script for further information
 
-my $VERSION = "0.0.3"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0.4"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 sub split_maltego_additional_fields {
 
@@ -43,6 +43,9 @@ sub is_facebook_profileid_empty {
 
 sub facebook_graphapi_down {
     $facebook_graphapi_URL = $_[0];
+    print("<MaltegoMessage>\n");
+	print("<MaltegoTransformResponseMessage>\n");
+	print("\t<UIMessages>\n");
 	# ISSUE Reflect the value of $VERSION from calling main()
 	print(
 	"\t\t<UIMessage MessageType=\"Inform\">Facebook GraphAPI Profile Cover Image Local Transform v$VERSION</UIMessage>\n"
