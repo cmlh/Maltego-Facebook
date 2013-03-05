@@ -2,7 +2,7 @@
 #
 # Please refer to the Plain Old Documentation (POD) at the end of this Perl Script for further information
 
-my $VERSION = "0.0.4"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0.5"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 sub split_maltego_additional_fields {
 
@@ -23,13 +23,14 @@ sub split_maltego_additional_fields {
 sub is_facebook_profileid_empty {
     $facebook_profileid = $_[0];
     $facebook_affiliation_name = $_[1];
+    $transform_version = $_[2];
     if (!(defined ($facebook_profileid))) {
 	    print("<MaltegoMessage>\n");
     	print("<MaltegoTransformResponseMessage>\n");
     	print("\t<UIMessages>\n");
     	# ISSUE Reflect the value of $VERSION from calling main()
     	print(
-		"\t\t<UIMessage MessageType=\"Inform\">Facebook GraphAPI Profile Cover Image Local Transform v$VERSION</UIMessage>\n"
+		"\t\t<UIMessage MessageType=\"Inform\">Facebook GraphAPI Profile Cover Image Local Transform v$transform_version</UIMessage>\n"
 		);
 		print("\t\t<UIMessage MessageType=\"PartialError\">No UID value for $facebook_affiliation_name</UIMessage>\n");
     	print("\t</UIMessages>\n");
