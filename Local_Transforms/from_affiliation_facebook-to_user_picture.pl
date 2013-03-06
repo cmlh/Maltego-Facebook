@@ -30,7 +30,7 @@ use POSIX qw(strftime);
 # "#####" is for Smart::Comments CPAN Module
 ##### [<now>] Commenced
 
-my $VERSION = "0.0_16"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0_17"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 #TODO Refactor facebook_graphapi.pl as a module
 do 'facebook_graphapi.pl';
@@ -68,7 +68,7 @@ $http_request->agent('Mozilla/5.0');
 my $http_response = $http_request->head($facebook_graphapi_URL);
 my $facebook_graphapi_redirect_URL = $http_response->{url};
 
-facebook_graphapi_down("$facebook_graphapi_URL", $VERSION)
+facebook_graphapi_down($facebook_graphapi_URL, $VERSION, $facebook_affiliation_name)
   unless $http_response->{success};
 
 print("<MaltegoMessage>\n");
