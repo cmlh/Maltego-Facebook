@@ -30,7 +30,7 @@ use POSIX qw(strftime);
 # "#####" is for Smart::Comments CPAN Module
 ##### [<now>] Commenced
 
-my $VERSION = "0.0_23"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0_24"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 #TODO Refactor facebook_graphapi.pl as a module
 do 'facebook_graphapi.pl';
@@ -106,7 +106,7 @@ elsif ($http_response_ref) {
     my $facebook_affiliation_filename = $facebook_affiliation_name;
     $facebook_affiliation_filename =~ s/\s//g;
 
-	# Value of $new_image is 1 if prior image does not exist in /Images/Covers or SHA-1 hash is different
+	# Value of $new_image is 1 if prior image does not exist in the /Images/ dir or SHA-1 hash is different
 	my $new_image = "0";
 	my $hex_previous;
     #TODO Refactor as sub()
@@ -116,7 +116,7 @@ elsif ($http_response_ref) {
         my $sha = new Digest::SHA;
         $sha->addfile(*COVER_JPG);
         close COVER_JPG;
-        $hex_previous = $sha->hexdigest();
+        my $hex_previous = $sha->hexdigest();
         print("\t\t<UIMessage MessageType=\"Inform\">SHA of previous $facebook_affiliation_filename.jpg is $hex_previous</UIMessage>\n");
         unlink ("./Images/Covers/$facebook_affiliation_filename.jpg");
     }
