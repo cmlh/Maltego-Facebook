@@ -30,7 +30,7 @@ use POSIX qw(strftime);
 # "#####" is for Smart::Comments CPAN Module
 ##### [<now>] Commenced
 
-my $VERSION = "0.0_25"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0_26"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 #TODO Refactor facebook_graphapi.pl as a module
 do 'facebook_graphapi.pl';
@@ -108,21 +108,22 @@ elsif ($http_response_ref) {
 
 	# Value of $new_image is 1 if prior image does not exist in the /Images/ dir or SHA-1 hash is different
 	my $new_image = "0";
-	my $hex_previous;
+	my $hex_previous = "0";
     #TODO Refactor as sub()
     #TODO mkdir /Images/Covers if it does not exist
+    
     if ( -e "./Images/Covers/$facebook_affiliation_filename.jpg" ) {
         open COVER_JPG, "./Images/Covers/$facebook_affiliation_filename.jpg";
         my $sha = new Digest::SHA;
         $sha->addfile(*COVER_JPG);
         close COVER_JPG;
-        my $hex_previous = $sha->hexdigest();
-        print("\t\t<UIMessage MessageType=\"Inform\">SHA of previous $facebook_affiliation_filename.jpg is $hex_previous</UIMessage>\n");
+        $hex_previous = $sha->hexdigest();
+        print STDERR ("\t\tSHA of previous $facebook_affiliation_filename.jpg is $hex_previous\n");
         unlink ("./Images/Covers/$facebook_affiliation_filename.jpg");
     }
     else {
-        print
-"\t\t<UIMessage MessageType=\"Inform\">./Images/Covers/$facebook_affiliation_filename.jpg does not exist</UIMessage>\n";
+        print STDERR
+"\t\t./Images/Covers/$facebook_affiliation_filename.jpg does not exist";
 		$new_image = "1";
     }
 	
@@ -135,7 +136,7 @@ elsif ($http_response_ref) {
     my $hex_recent = $sha->hexdigest();
    	# "###" is for Smart::Comments CPAN Module
 	### \$hex_recent is: $hex_recent;
-	### \$hex_current is: $hex_previous;
+	### \$hex_previous is: $hex_previous;
     if ($hex_previous eq $hex_recent) {
     	$new_image = "0";
 		print ("\t\t<UIMessage MessageType=\"Inform\">Cover Image for $facebook_affiliation_name has not changed</UIMessage>\n");
