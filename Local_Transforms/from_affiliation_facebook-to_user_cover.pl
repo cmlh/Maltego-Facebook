@@ -30,7 +30,7 @@ use POSIX qw(strftime);
 # "#####" is for Smart::Comments CPAN Module
 ##### [<now>] Commenced
 
-my $VERSION = "0.0_26"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0_27"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 #TODO Refactor facebook_graphapi.pl as a module
 do 'facebook_graphapi.pl';
@@ -118,12 +118,12 @@ elsif ($http_response_ref) {
         $sha->addfile(*COVER_JPG);
         close COVER_JPG;
         $hex_previous = $sha->hexdigest();
-        print STDERR ("\t\tSHA of previous $facebook_affiliation_filename.jpg is $hex_previous\n");
+        print STDERR ("SHA of previous $facebook_affiliation_filename.jpg is $hex_previous\n");
         unlink ("./Images/Covers/$facebook_affiliation_filename.jpg");
     }
     else {
         print STDERR
-"\t\t./Images/Covers/$facebook_affiliation_filename.jpg does not exist";
+"./Images/Covers/$facebook_affiliation_filename.jpg does not exist";
 		$new_image = "1";
     }
 	

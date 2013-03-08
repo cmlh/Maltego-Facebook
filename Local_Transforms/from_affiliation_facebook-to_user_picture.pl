@@ -30,7 +30,7 @@ use POSIX qw(strftime);
 # "#####" is for Smart::Comments CPAN Module
 ##### [<now>] Commenced
 
-my $VERSION = "0.0_17"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0_18"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 #TODO Refactor facebook_graphapi.pl as a module
 do 'facebook_graphapi.pl';
@@ -99,8 +99,8 @@ if ( -e "./Images/Pictures/$facebook_affiliation_filename.jpg" ) {
     $sha->addfile(*PICTURE_JPG);
     close PICTURE_JPG;
     $hex_previous = $sha->hexdigest();
-    print(
-"\t\t<UIMessage MessageType=\"Inform\">SHA of previous $facebook_affiliation_filename.jpg is $hex_previous</UIMessage>\n"
+    print STDERR (
+"SHA of previous $facebook_affiliation_filename.jpg is $hex_previous\n"
     );
     unlink ("./Images/Pictures/$facebook_affiliation_filename.jpg");
 }
@@ -121,7 +121,7 @@ my $sha = new Digest::SHA;
 $sha->addfile(*PICTURE_JPG);
 close PICTURE_JPG;
 my $hex_recent = $sha->hexdigest();
-print ("\t\t<UIMessage MessageType=\"Inform\">SHA of recent $facebook_affiliation_filename.jpg is $hex_recent</UIMessage>\n");
+print STDERR ("SHA of recent $facebook_affiliation_filename.jpg is $hex_recent\n");
 if ($hex_previous eq $hex_recent) {
     $new_image = "0";
 		print ("\t\t<UIMessage MessageType=\"Inform\">Cover Image for $facebook_affiliation_name has not changed</UIMessage>\n");
