@@ -18,8 +18,9 @@ use diagnostics;
 # TODO use autodie qw(:all);
 use autodie;
 
-use JSON; # JSON v2.53
-use HTTP::Tiny;	# HTTP::Tiny v0.024
+use JSON;          # JSON v2.53
+use HTTP::Tiny;    # HTTP::Tiny v0.024
+
 # use Data::Dumper;
 use Digest::SHA;
 use POSIX qw(strftime);
@@ -30,7 +31,7 @@ use POSIX qw(strftime);
 # "#####" is for Smart::Comments CPAN Module
 ##### [<now>] Commenced
 
-my $VERSION = "0.0_27"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0_28"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 #TODO Refactor facebook_graphapi.pl as a module
 do 'facebook_graphapi.pl';
@@ -49,12 +50,14 @@ my $maltego_additional_field_values = $ARGV[1];
 my %maltego_additional_field_values =
   split_maltego_additional_fields($maltego_additional_field_values);
 my $facebook_profileid = $maltego_additional_field_values{"uid"};
-my $facebook_affiliation_name = $maltego_selected_entity_value;
 
-is_facebook_profileid_empty($facebook_profileid, $facebook_affiliation_name, $VERSION);
+my $facebook_affiliation_name = $maltego_selected_entity_value;
 
 # "###" is for Smart::Comments CPAN Module
 ### \$facebook_profileid is: $facebook_profileid;
+
+is_facebook_profileid_empty( $facebook_profileid, $facebook_affiliation_name,
+    $VERSION );
 
 my $facebook_graphapi_URL =
   "https://graph.facebook.com/$facebook_profileid?fields=cover";
@@ -78,55 +81,60 @@ my $http_response = $http_request->get("$facebook_graphapi_URL");
 # print DEBUG_LOG ( Data::Dumper::Dumper( decode_json($http_response) ) );
 # close DEBUG_LOG;
 
-facebook_graphapi_down($facebook_graphapi_URL, $VERSION, $facebook_affiliation_name)
+facebook_graphapi_down( $facebook_graphapi_URL, $VERSION,
+    $facebook_affiliation_name )
   unless $http_response->{success};
 
 print("<MaltegoMessage>\n");
 print("<MaltegoTransformResponseMessage>\n");
 print("\t<UIMessages>\n");
-
 print(
 "\t\t<UIMessage MessageType=\"Inform\">Facebook GraphAPI Profile Cover Image Local Transform v$VERSION</UIMessage>\n"
 );
 
-
-
 my $http_response_ref = decode_json( $http_response->{content} );
-my %http_response                 = %$http_response_ref;
+my %http_response     = %$http_response_ref;
 
-if (!( $http_response{'cover'}{'source'})) {
- 	print ("\t\t<UIMessage MessageType=\"Inform\">No Cover Picture for $facebook_affiliation_name;</UIMessage>\n");
- 	print("\t</UIMessages>\n");
- 	print("\t<Entities>\n");
- 	print("\t\t<Entity Type=\"maltego.Image\"><Value>No Cover</Value></Entity>\n");
-} 
+if ( !( $http_response{'cover'}{'source'} ) ) {
+    print(
+"\t\t<UIMessage MessageType=\"Inform\">No Cover Picture for $facebook_affiliation_name;</UIMessage>\n"
+    );
+    print("\t</UIMessages>\n");
+    print("\t<Entities>\n");
+    print(
+        "\t\t<Entity Type=\"maltego.Image\"><Value>No Cover</Value></Entity>\n"
+    );
+}
 
 elsif ($http_response_ref) {
 
     my $facebook_affiliation_filename = $facebook_affiliation_name;
     $facebook_affiliation_filename =~ s/\s//g;
 
-	# Value of $new_image is 1 if prior image does not exist in the /Images/ dir or SHA-1 hash is different
-	my $new_image = "0";
-	my $hex_previous = "0";
+# Value of $new_image is 1 if prior image does not exist in the /Images/ dir or SHA-1 hash is different
+    my $new_image    = "0";
+    my $hex_previous = "0";
+
     #TODO Refactor as sub()
     #TODO mkdir /Images/Covers if it does not exist
-    
+
     if ( -e "./Images/Covers/$facebook_affiliation_filename.jpg" ) {
         open COVER_JPG, "./Images/Covers/$facebook_affiliation_filename.jpg";
         my $sha = new Digest::SHA;
         $sha->addfile(*COVER_JPG);
         close COVER_JPG;
         $hex_previous = $sha->hexdigest();
-        print STDERR ("SHA of previous $facebook_affiliation_filename.jpg is $hex_previous\n");
-        unlink ("./Images/Covers/$facebook_affiliation_filename.jpg");
+        print STDERR (
+"SHA of previous $facebook_affiliation_filename.jpg is $hex_previous\n"
+        );
+        unlink("./Images/Covers/$facebook_affiliation_filename.jpg");
     }
     else {
         print STDERR
-"./Images/Covers/$facebook_affiliation_filename.jpg does not exist";
-		$new_image = "1";
+          "./Images/Covers/$facebook_affiliation_filename.jpg does not exist";
+        $new_image = "1";
     }
-	
+
     $http_request->mirror( $http_response{'cover'}{'source'},
         "./Images/Covers/$facebook_affiliation_filename.jpg" );
     open COVER_JPG, "./Images/Covers/$facebook_affiliation_filename.jpg";
@@ -134,47 +142,59 @@ elsif ($http_response_ref) {
     $sha->addfile(*COVER_JPG);
     close COVER_JPG;
     my $hex_recent = $sha->hexdigest();
-   	# "###" is for Smart::Comments CPAN Module
-	### \$hex_recent is: $hex_recent;
-	### \$hex_previous is: $hex_previous;
-    if ($hex_previous eq $hex_recent) {
-    	$new_image = "0";
-		print ("\t\t<UIMessage MessageType=\"Inform\">Cover Image for $facebook_affiliation_name has not changed</UIMessage>\n");
-    } 
+
+    # "###" is for Smart::Comments CPAN Module
+    ### \$hex_recent is: $hex_recent;
+    ### \$hex_previous is: $hex_previous;
+    if ( $hex_previous eq $hex_recent ) {
+        $new_image = "0";
+        print(
+"\t\t<UIMessage MessageType=\"Inform\">Cover Image for $facebook_affiliation_name has not changed</UIMessage>\n"
+        );
+    }
     else {
-    	 print ("\t\t<UIMessage MessageType=\"Inform\">Cover Image for $facebook_affiliation_name has been updated</UIMessage>\n");
-	}
-	# Refer to "man git-rev-parse" -short for length of four
-	# Also, since the end user might not have the image on first execution it is not possible to generate the git hash as the blob is unknown.
-	my $shortern_hash = substr($hex_recent, 0, 4);
-	# "###" is for Smart::Comments CPAN Module
-	### \$shortern_hash is: $shortern_hash;
-    # print("\t\t<UIMessage MessageType=\"Inform\">SHA of recent $facebook_affiliation_filename.jpg is $hex</UIMessage>\n");
+        print(
+"\t\t<UIMessage MessageType=\"Inform\">Cover Image for $facebook_affiliation_name has been updated</UIMessage>\n"
+        );
+    }
+
+# Refer to "man git-rev-parse" -short for length of four
+# Also, since the end user might not have the image on first execution it is not possible to generate the git hash as the blob is unknown.
+    my $shortern_hash = substr( $hex_recent, 0, 4 );
+
+    # "###" is for Smart::Comments CPAN Module
+    ### \$shortern_hash is: $shortern_hash;
+# print("\t\t<UIMessage MessageType=\"Inform\">SHA of recent $facebook_affiliation_filename.jpg is $hex</UIMessage>\n");
     print("\t</UIMessages>\n");
     print("\t<Entities>\n");
-    if ($new_image eq "1") {
-    	# "###" is for Smart::Comments CPAN Module
-		### \$new_image is: $new_image;
-    	print("\t\t<Entity Type=\"maltego.image\"><Value>Cover - $shortern_hash</Value>\n");
-    	print("\t\t\t<AdditionalFields>\n");
-    	print(
-        	"\t\t\t\t<Field Name=\"fullimage\">$http_response{'source'}</Field>\n");
-        	my $date = strftime("%d %b %Y at %H:%M:%S", localtime(time));
-        	print("\t\t\t\t<Field Name=\'notes#\'>Discovered on $date</Field>\n");
-    	print("\t\t\t</AdditionalFields>\n");
-    	print("\t\t\t\t<IconURL>$http_response{'source'}</IconURL>\n");
-    	print("\t\t</Entity>\n");
-	    print(
-			"\t\t<Entity Type=\"maltego.FacebookObject\"><Value>Cover - $shortern_hash</Value>\n"
-    	);
-    	print("\t\t\t<AdditionalFields>\n");
-    	print(
-        	"\t\t\t\t<Field Name=\"fullimage\">$http_response{'source'}</Field>\n");
-        	my $date = strftime("%d %b %Y at %H:%M:%S", localtime(time));
-        	print("\t\t\t\t<Field Name=\'notes#\'>Discovered on $date</Field>\n");
-    	print("\t\t\t</AdditionalFields>\n");
-   		print("\t\t\t<IconURL>$http_response{'source'}</IconURL>\n");
-    	print("\t\t</Entity>\n");
+    if ( $new_image eq "1" ) {
+
+        # "###" is for Smart::Comments CPAN Module
+        ### \$new_image is: $new_image;
+        print(
+"\t\t<Entity Type=\"maltego.image\"><Value>Cover - $shortern_hash</Value>\n"
+        );
+        print("\t\t\t<AdditionalFields>\n");
+        print(
+"\t\t\t\t<Field Name=\"fullimage\">$http_response{'source'}</Field>\n"
+        );
+        my $date = strftime( "%d %b %Y at %H:%M:%S", localtime(time) );
+        print("\t\t\t\t<Field Name=\'notes#\'>Discovered on $date</Field>\n");
+        print("\t\t\t</AdditionalFields>\n");
+        print("\t\t\t\t<IconURL>$http_response{'source'}</IconURL>\n");
+        print("\t\t</Entity>\n");
+        print(
+"\t\t<Entity Type=\"maltego.FacebookObject\"><Value>Cover - $shortern_hash</Value>\n"
+        );
+        print("\t\t\t<AdditionalFields>\n");
+        print(
+"\t\t\t\t<Field Name=\"fullimage\">$http_response{'source'}</Field>\n"
+        );
+        my $date = strftime( "%d %b %Y at %H:%M:%S", localtime(time) );
+        print("\t\t\t\t<Field Name=\'notes#\'>Discovered on $date</Field>\n");
+        print("\t\t\t</AdditionalFields>\n");
+        print("\t\t\t<IconURL>$http_response{'source'}</IconURL>\n");
+        print("\t\t</Entity>\n");
     }
 }
 
@@ -185,6 +205,7 @@ print("\t</Entities>\n");
 print("</MaltegoTransformResponseMessage>\n");
 print("</MaltegoMessage>\n");
 
+# "###" is for Smart::Comments CPAN Module
 ##### [<now>] Finished
 
 =head1 NAME
