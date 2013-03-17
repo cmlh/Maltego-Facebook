@@ -31,7 +31,7 @@ use POSIX qw(strftime);
 # "#####" is for Smart::Comments CPAN Module
 ##### [<now>] Commenced
 
-my $VERSION = "0.0_28"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0_29"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 #TODO Refactor facebook_graphapi.pl as a module
 do 'facebook_graphapi.pl';
@@ -134,6 +134,9 @@ elsif ($http_response_ref) {
           "./Images/Covers/$facebook_affiliation_filename.jpg does not exist";
         $new_image = "1";
     }
+    
+    # "###" is for Smart::Comments CPAN Module
+    ### \$new_image is: $new_image;
 
     $http_request->mirror( $http_response{'cover'}{'source'},
         "./Images/Covers/$facebook_affiliation_filename.jpg" );
@@ -156,7 +159,11 @@ elsif ($http_response_ref) {
         print(
 "\t\t<UIMessage MessageType=\"Inform\">Cover Image for $facebook_affiliation_name has been updated</UIMessage>\n"
         );
+        $new_image = "1";
     }
+    
+    # "###" is for Smart::Comments CPAN Module
+    ### \$new_image is: $new_image;
 
 # Refer to "man git-rev-parse" -short for length of four
 # Also, since the end user might not have the image on first execution it is not possible to generate the git hash as the blob is unknown.
@@ -179,7 +186,7 @@ elsif ($http_response_ref) {
 "\t\t\t\t<Field Name=\"fullimage\">$http_response{'source'}</Field>\n"
         );
         my $date = strftime( "%d %b %Y at %H:%M:%S", localtime(time) );
-        print("\t\t\t\t<Field Name=\'notes#\'>Discovered on $date</Field>\n");
+        print("\t\t\t\t<Field Name=\'notes#\'>Discovered on $date\n\nSHA1 Hash is: $hex_recent</Field>\n");
         print("\t\t\t</AdditionalFields>\n");
         print("\t\t\t\t<IconURL>$http_response{'source'}</IconURL>\n");
         print("\t\t</Entity>\n");
@@ -191,7 +198,7 @@ elsif ($http_response_ref) {
 "\t\t\t\t<Field Name=\"fullimage\">$http_response{'source'}</Field>\n"
         );
         my $date = strftime( "%d %b %Y at %H:%M:%S", localtime(time) );
-        print("\t\t\t\t<Field Name=\'notes#\'>Discovered on $date</Field>\n");
+        print("\t\t\t\t<Field Name=\'notes#\'>Discovered on $date\n\nSHA1 Hash is: $hex_recent</Field>\n");
         print("\t\t\t</AdditionalFields>\n");
         print("\t\t\t<IconURL>$http_response{'source'}</IconURL>\n");
         print("\t\t</Entity>\n");
