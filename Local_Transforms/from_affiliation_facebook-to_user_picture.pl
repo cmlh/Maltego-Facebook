@@ -18,8 +18,9 @@ use diagnostics;
 # TODO use autodie qw(:all);
 use autodie;
 
-use HTTP::Tiny; # HTTP::Tiny v0.024
+use HTTP::Tiny;    # HTTP::Tiny v0.024
 use URI;
+
 # use Data::Dumper;
 use Digest::SHA;
 use POSIX qw(strftime);
@@ -30,7 +31,7 @@ use POSIX qw(strftime);
 # "#####" is for Smart::Comments CPAN Module
 ##### [<now>] Commenced
 
-my $VERSION = "0.0_18"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0_19"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 #TODO Refactor facebook_graphapi.pl as a module
 do 'facebook_graphapi.pl';
@@ -55,12 +56,15 @@ my $facebook_affiliation_name = $maltego_selected_entity_value;
 # "###" is for Smart::Comments CPAN Module
 ### \$facebook_profileid is: $facebook_profileid;
 
-is_facebook_profileid_empty($facebook_profileid, $facebook_affiliation_name, $VERSION);
-
+is_facebook_profileid_empty( $facebook_profileid, $facebook_affiliation_name,
+    $VERSION );
 
 # TODO ?types=small,normal,square,large
 my $facebook_graphapi_URL =
   "https://graph.facebook.com/$facebook_profileid/picture?type=large";
+  
+# "###" is for Smart::Comments CPAN Module
+### \$facebook_graphapi_URL is: $facebook_graphapi_URL;
 
 my $http_request = HTTP::Tiny->new;
 $http_request->agent('Mozilla/5.0');
@@ -68,7 +72,8 @@ $http_request->agent('Mozilla/5.0');
 my $http_response = $http_request->head($facebook_graphapi_URL);
 my $facebook_graphapi_redirect_URL = $http_response->{url};
 
-facebook_graphapi_down($facebook_graphapi_URL, $VERSION, $facebook_affiliation_name)
+facebook_graphapi_down( $facebook_graphapi_URL, $VERSION,
+    $facebook_affiliation_name )
   unless $http_response->{success};
 
 print("<MaltegoMessage>\n");
@@ -77,8 +82,6 @@ print("\t<UIMessages>\n");
 print(
 "\t\t<UIMessage MessageType=\"Inform\">Facebook GraphAPI Profile Cover Image Local Transform v$VERSION</UIMessage>\n"
 );
-
-
 
 # "###" is for Smart::Comments CPAN Module
 ### \$facebook_graphapi_redirect_URL is: $facebook_graphapi_redirect_URL;
@@ -100,14 +103,16 @@ if ( -e "./Images/Pictures/$facebook_affiliation_filename.jpg" ) {
     close PICTURE_JPG;
     $hex_previous = $sha->hexdigest();
     print STDERR (
-"SHA of previous $facebook_affiliation_filename.jpg is $hex_previous\n"
+        "SHA of previous $facebook_affiliation_filename.jpg is $hex_previous\n"
     );
-    unlink ("./Images/Pictures/$facebook_affiliation_filename.jpg");
+    unlink("./Images/Pictures/$facebook_affiliation_filename.jpg");
 }
 else {
     print
 "\t\t<UIMessage MessageType=\"Inform\">./Images/Pictures/$facebook_affiliation_filename.jpg does not exist</UIMessage>\n";
-	$new_image = "1";
+    $new_image = "1";
+    # "###" is for Smart::Comments CPAN Module
+    ### \$new_image is: $new_image;
 }
 
 #TODO Refactor as sub() {}
@@ -115,46 +120,67 @@ else {
 
 $http_request->mirror( $facebook_graphapi_redirect_URL,
     "./Images/Pictures/$facebook_affiliation_filename.jpg" );
+
 #TODO mkdir /Images/Pictures if it does not exist
 open PICTURE_JPG, "./Images/Pictures/$facebook_affiliation_filename.jpg";
 my $sha = new Digest::SHA;
 $sha->addfile(*PICTURE_JPG);
 close PICTURE_JPG;
 my $hex_recent = $sha->hexdigest();
-print STDERR ("SHA of recent $facebook_affiliation_filename.jpg is $hex_recent\n");
-if ($hex_previous eq $hex_recent) {
+print STDERR (
+    "SHA of recent $facebook_affiliation_filename.jpg is $hex_recent\n");
+if ( $hex_previous eq $hex_recent ) {
     $new_image = "0";
-		print ("\t\t<UIMessage MessageType=\"Inform\">Cover Image for $facebook_affiliation_name has not changed</UIMessage>\n");
-} 
+    # "###" is for Smart::Comments CPAN Module
+    ### \$new_image is: $new_image;
+    print(
+"\t\t<UIMessage MessageType=\"Inform\">Cover Image for $facebook_affiliation_name has not changed</UIMessage>\n"
+    );
+}
 else {
-	print ("\t\t<UIMessage MessageType=\"Inform\">Cover Image for $facebook_affiliation_name has been updated</UIMessage>\n");
+    print(
+"\t\t<UIMessage MessageType=\"Inform\">Cover Image for $facebook_affiliation_name has been updated</UIMessage>\n"
+    );
+    $new_image = "1";
+    # "###" is for Smart::Comments CPAN Module
+    ### \$new_image is: $new_image;
 }
 print("\t</UIMessages>\n");
 
 print("\t<Entities>\n");
-if ($new_image eq "1") {
-    # "###" is for Smart::Comments CPAN Module
-	### \$new_image is: $new_image;
-	my $shortern_hash = substr($hex_recent, 0, 4);
-	print("\t\t<Entity Type=\"maltego.Image\"><Value>Picture - $shortern_hash</Value>\n");
-	print("\t\t\t<AdditionalFields>\n");
-	print("\t\t\t\t<Field Name=\"url\">$facebook_graphapi_redirect_URL</Field>\n");
-	my $date = strftime("%d %b %Y at %H:%M:%S", localtime(time));
-	print("\t\t\t\t<Field Name=\'notes#\'>Discovered on $date</Field>\n");
-	print("\t\t\t</AdditionalFields>\n");
-	print("\t\t\t<IconURL>$facebook_graphapi_redirect_URL</IconURL>\n");
-	print("\t\t</Entity>\n");
+if ( $new_image eq "1" ) {
 
-	print("\t\t<Entity Type=\"maltego.URL\"><Value>Picture - $shortern_hash</Value>\n");
-	print("\t\t\t<AdditionalFields>\n");
-	print("\t\t\t\t<Field Name=\"url\">$facebook_graphapi_redirect_URL</Field>\n");
-	print("\t\t\t\t<Field Name=\"title\">$facebook_affiliation_name</Field>\n");
-	my $date = strftime("%d %b %Y at %H:%M:%S", localtime(time));
-	print("\t\t\t\t<Field Name=\'notes#\'>Discovered on $date</Field>\n");
-	print("\t\t\t</AdditionalFields>\n");
-	print("\t\t\t<IconURL>$facebook_graphapi_redirect_URL</IconURL>\n");
-	print("\t\t</Entity>\n");
+    # "###" is for Smart::Comments CPAN Module
+    ### \$new_image is: $new_image;
+    my $shortern_hash = substr( $hex_recent, 0, 4 );
+    print(
+"\t\t<Entity Type=\"maltego.Image\"><Value>Picture - $shortern_hash</Value>\n"
+    );
+    print("\t\t\t<AdditionalFields>\n");
+    print(
+        "\t\t\t\t<Field Name=\"url\">$facebook_graphapi_redirect_URL</Field>\n"
+    );
+    my $date = strftime( "%d %b %Y at %H:%M:%S", localtime(time) );
+    print("\t\t\t\t<Field Name=\'notes#\'>Discovered on $date\n\nSHA1 Hash is: $hex_recent</Field>\n");
+    print("\t\t\t</AdditionalFields>\n");
+    print("\t\t\t<IconURL>$facebook_graphapi_redirect_URL</IconURL>\n");
+    print("\t\t</Entity>\n");
+
+    print(
+"\t\t<Entity Type=\"maltego.URL\"><Value>Picture - $shortern_hash</Value>\n"
+    );
+    print("\t\t\t<AdditionalFields>\n");
+    print(
+        "\t\t\t\t<Field Name=\"url\">$facebook_graphapi_redirect_URL</Field>\n"
+    );
+    print("\t\t\t\t<Field Name=\"title\">$facebook_affiliation_name</Field>\n");
+    my $date = strftime( "%d %b %Y at %H:%M:%S", localtime(time) );
+    print("\t\t\t\t<Field Name=\'notes#\'>Discovered on $date\n\nSHA1 Hash is: $hex_recent</Field>\n");
+    print("\t\t\t</AdditionalFields>\n");
+    print("\t\t\t<IconURL>$facebook_graphapi_redirect_URL</IconURL>\n");
+    print("\t\t</Entity>\n");
 }
+
 # TODO Return optional error Maltego Entity.
 print("\t</Entities>\n");
 
