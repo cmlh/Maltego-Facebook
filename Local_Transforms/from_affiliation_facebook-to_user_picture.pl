@@ -66,6 +66,8 @@ my $facebook_graphapi_URL =
 # "###" is for Smart::Comments CPAN Module
 ### \$facebook_graphapi_URL is: $facebook_graphapi_URL;
 
+#TODO http://developers.facebook.com/docs/reference/api/using-pictures/#json
+
 my $http_request = HTTP::Tiny->new;
 $http_request->agent('Mozilla/5.0');
 
