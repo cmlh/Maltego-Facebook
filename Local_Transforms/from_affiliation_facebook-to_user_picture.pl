@@ -62,7 +62,7 @@ is_facebook_profileid_empty( $facebook_profileid, $facebook_affiliation_name,
 # TODO ?types=small,normal,square,large
 my $facebook_graphapi_URL =
   "https://graph.facebook.com/$facebook_profileid/picture?type=large";
-  
+
 # "###" is for Smart::Comments CPAN Module
 ### \$facebook_graphapi_URL is: $facebook_graphapi_URL;
 
@@ -113,6 +113,7 @@ else {
     print
 "\t\t<UIMessage MessageType=\"Inform\">./Images/Pictures/$facebook_affiliation_filename.jpg does not exist</UIMessage>\n";
     $new_image = "1";
+
     # "###" is for Smart::Comments CPAN Module
     ### \$new_image is: $new_image;
 }
@@ -133,6 +134,7 @@ print STDERR (
     "SHA of recent $facebook_affiliation_filename.jpg is $hex_recent\n");
 if ( $hex_previous eq $hex_recent ) {
     $new_image = "0";
+
     # "###" is for Smart::Comments CPAN Module
     ### \$new_image is: $new_image;
     print(
@@ -144,6 +146,7 @@ else {
 "\t\t<UIMessage MessageType=\"Inform\">Cover Image for $facebook_affiliation_name has been updated</UIMessage>\n"
     );
     $new_image = "1";
+
     # "###" is for Smart::Comments CPAN Module
     ### \$new_image is: $new_image;
 }
@@ -163,7 +166,9 @@ if ( $new_image eq "1" ) {
         "\t\t\t\t<Field Name=\"url\">$facebook_graphapi_redirect_URL</Field>\n"
     );
     my $date = strftime( "%d %b %Y at %H:%M:%S", localtime(time) );
-    print("\t\t\t\t<Field Name=\'notes#\'>Discovered on $date\n\nSHA1 Hash is: $hex_recent</Field>\n");
+    print(
+"\t\t\t\t<Field Name=\'notes#\'>Discovered on $date\n\nSHA1 Hash is: $hex_recent</Field>\n"
+    );
     print("\t\t\t</AdditionalFields>\n");
     print("\t\t\t<IconURL>$facebook_graphapi_redirect_URL</IconURL>\n");
     print("\t\t</Entity>\n");
@@ -177,7 +182,9 @@ if ( $new_image eq "1" ) {
     );
     print("\t\t\t\t<Field Name=\"title\">$facebook_affiliation_name</Field>\n");
     my $date = strftime( "%d %b %Y at %H:%M:%S", localtime(time) );
-    print("\t\t\t\t<Field Name=\'notes#\'>Discovered on $date\n\nSHA1 Hash is: $hex_recent</Field>\n");
+    print(
+"\t\t\t\t<Field Name=\'notes#\'>Discovered on $date\n\nSHA1 Hash is: $hex_recent</Field>\n"
+    );
     print("\t\t\t</AdditionalFields>\n");
     print("\t\t\t<IconURL>$facebook_graphapi_redirect_URL</IconURL>\n");
     print("\t\t</Entity>\n");

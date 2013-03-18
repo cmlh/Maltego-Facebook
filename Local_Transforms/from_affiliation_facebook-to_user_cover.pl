@@ -134,7 +134,7 @@ elsif ($http_response_ref) {
           "./Images/Covers/$facebook_affiliation_filename.jpg does not exist";
         $new_image = "1";
     }
-    
+
     # "###" is for Smart::Comments CPAN Module
     ### \$new_image is: $new_image;
 
@@ -161,7 +161,7 @@ elsif ($http_response_ref) {
         );
         $new_image = "1";
     }
-    
+
     # "###" is for Smart::Comments CPAN Module
     ### \$new_image is: $new_image;
 
@@ -186,7 +186,9 @@ elsif ($http_response_ref) {
 "\t\t\t\t<Field Name=\"fullimage\">$http_response{'source'}</Field>\n"
         );
         my $date = strftime( "%d %b %Y at %H:%M:%S", localtime(time) );
-        print("\t\t\t\t<Field Name=\'notes#\'>Discovered on $date\n\nSHA1 Hash is: $hex_recent</Field>\n");
+        print(
+"\t\t\t\t<Field Name=\'notes#\'>Discovered on $date\n\nSHA1 Hash is: $hex_recent</Field>\n"
+        );
         print("\t\t\t</AdditionalFields>\n");
         print("\t\t\t\t<IconURL>$http_response{'source'}</IconURL>\n");
         print("\t\t</Entity>\n");
@@ -198,7 +200,9 @@ elsif ($http_response_ref) {
 "\t\t\t\t<Field Name=\"fullimage\">$http_response{'source'}</Field>\n"
         );
         my $date = strftime( "%d %b %Y at %H:%M:%S", localtime(time) );
-        print("\t\t\t\t<Field Name=\'notes#\'>Discovered on $date\n\nSHA1 Hash is: $hex_recent</Field>\n");
+        print(
+"\t\t\t\t<Field Name=\'notes#\'>Discovered on $date\n\nSHA1 Hash is: $hex_recent</Field>\n"
+        );
         print("\t\t\t</AdditionalFields>\n");
         print("\t\t\t<IconURL>$http_response{'source'}</IconURL>\n");
         print("\t\t</Entity>\n");
