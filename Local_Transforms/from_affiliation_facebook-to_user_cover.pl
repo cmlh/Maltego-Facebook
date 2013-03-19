@@ -31,7 +31,7 @@ use POSIX qw(strftime);
 # "#####" is for Smart::Comments CPAN Module
 ##### [<now>] Commenced
 
-my $VERSION = "0.0_29"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0_30"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 #TODO Refactor facebook_graphapi.pl as a module
 do 'facebook_graphapi.pl';
@@ -183,28 +183,25 @@ elsif ($http_response_ref) {
         );
         print("\t\t\t<AdditionalFields>\n");
         print(
-"\t\t\t\t<Field Name=\"fullimage\">$http_response{'source'}</Field>\n"
+"\t\t\t\t<Field Name=\"url\">$http_response{'cover'}{'source'}</Field>\n"
         );
         my $date = strftime( "%d %b %Y at %H:%M:%S", localtime(time) );
         print(
 "\t\t\t\t<Field Name=\'notes#\'>Discovered on $date\n\nSHA1 Hash is: $hex_recent</Field>\n"
         );
         print("\t\t\t</AdditionalFields>\n");
-        print("\t\t\t\t<IconURL>$http_response{'source'}</IconURL>\n");
+        print("\t\t\t\t<IconURL>$http_response{'cover'}{'source'}</IconURL>\n");
         print("\t\t</Entity>\n");
         print(
-"\t\t<Entity Type=\"maltego.FacebookObject\"><Value>Cover - $shortern_hash</Value>\n"
+"\t\t<Entity Type=\"maltego.FacebookObject\"><Value>$http_response{'cover'}{'id'}</Value>\n"
         );
         print("\t\t\t<AdditionalFields>\n");
-        print(
-"\t\t\t\t<Field Name=\"fullimage\">$http_response{'source'}</Field>\n"
-        );
         my $date = strftime( "%d %b %Y at %H:%M:%S", localtime(time) );
         print(
 "\t\t\t\t<Field Name=\'notes#\'>Discovered on $date\n\nSHA1 Hash is: $hex_recent</Field>\n"
         );
         print("\t\t\t</AdditionalFields>\n");
-        print("\t\t\t<IconURL>$http_response{'source'}</IconURL>\n");
+        print("\t\t\t<IconURL>$http_response{'cover'}{'source'}</IconURL>\n");
         print("\t\t</Entity>\n");
     }
 }
