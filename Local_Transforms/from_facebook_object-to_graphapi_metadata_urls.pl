@@ -7,11 +7,12 @@ use strict;
 use JSON;
 use HTTP::Tiny;
 use Data::Dumper;
+use Config::Std;
 
 # #CONFIGURATION Remove "#" for Smart::Comments
-use Smart::Comments;
+# use Smart::Comments;
 
-my $VERSION = "0.0.4"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0.5"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 # Command line arguments from Maltego
 my $maltego_selected_entity_value = $ARGV[0];
@@ -29,8 +30,13 @@ my @maltego_additional_field_values =
 
 my $facebook_object_id = $maltego_selected_entity_value;
 
+# CONFIGURATION
+# REFACTOR with "easydialogs" e.g. http://www.paterva.com/forum//index.php/topic,134.0.html as recommended by Andrew from Paterva
+read_config './etc/facebook_graphapi.conf' => my %config;
+my $facebook_graphapi_access_token = $config{'GraphAPI'}{'access_token'};
+
 my $facebook_graphapi_URL =
-  "https://graph.facebook.com/$facebook_object_id?metadata=1";
+  "https://graph.facebook.com/$facebook_object_id?metadata=1&access_token=$facebook_graphapi_access_token";
 
 # "###" is for Smart::Comments CPAN Module
 ### \$facebook_graphapi_URL is: $facebook_graphapi_URL;
