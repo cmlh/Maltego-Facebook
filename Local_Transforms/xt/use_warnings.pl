@@ -13,7 +13,7 @@ use Test::More "no_plan";
 # #CONFIGURATION Remove "#" for Smart::Comments
 # use Smart::Comments;
 
-my $VERSION = "0.0.2"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0.1"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 my @pl_files;
 
@@ -23,30 +23,29 @@ my $pl_file;
 
 foreach $pl_file (@pl_files) {
 
-# TODO Exclude to_bookmarked.pl from this test as sub split_maltego_additional_fields is not required by it.
     print $pl_file . "\n";
     open( PLFILE, $pl_file ) or die "Could not open $pl_file";
     my $line;
     my $result = "not ok";
     foreach $line (<PLFILE>) {
-        if ( $line =~ "# The above shebang is for" ) {
+        if ( $line =~ "use warnings" ) {
             $result = "ok";
-            ok( $line =~ "shebang", "shebang" );
+            ok( $line =~ "# use warnings", "use warnings" );
             diag("$line");
         }
     }
     if ( $result eq "not ok" ) {
-        fail("shebang");
+        fail("use warnings");
     }
 }
 
 =head1 NAME
 
-shebang.pl - "shebang"
+use_warnings.pl - "use warnings Test"
 
 =head1 VERSION
 
-This documentation refers "sub split_maltego_additional_fields" Alpha v$VERSION
+This documentation refers "use warnings Test" Alpha v$VERSION
 
 =head1 CONFIGURATION
 
@@ -54,7 +53,7 @@ Set the value(s) marked as #CONFIGURATION above this POD
     
 =head1 USAGE
 
-shebang.pl
+use_warnings.pl
 
 =head1 REQUIRED ARGUEMENTS
                 
@@ -62,7 +61,7 @@ shebang.pl
 
 =head1 DESCRIPTION
 
-Test to ensure that the shebang comment is correct.
+Test to ensure that the use warnings comment is stated.
 
 =head1 DEPENDENCIES
 

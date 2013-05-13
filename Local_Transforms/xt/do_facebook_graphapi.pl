@@ -11,7 +11,7 @@ use Test::More "no_plan";
 # #CONFIGURATION Remove "#" for Smart::Comments
 # use Smart::Comments;
 
-my $VERSION = "0.0.1"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
+my $VERSION = "0.0.2"; # May be required to upload script to CPAN i.e. http://www.cpan.org/scripts/submitting.html
 
 my @pl_files;
 
@@ -25,21 +25,26 @@ foreach $pl_file (@pl_files) {
     print $pl_file . "\n";
     open( PLFILE, $pl_file ) or die "Could not open $pl_file";
     my $line;
+    my $result = "not ok";
     foreach $line (<PLFILE>) {
         if ( $line =~ "do \'facebook_graphapi.pl\'\;" ) {
+            $result = "ok";
             ok( $line =~ "do", "do facebook_graphapi.pl" );
             diag("$line");
         }
+    }
+    if ( $result eq "not ok" ) {
+        fail("do facebook_graphapi.pl");
     }
 }
 
 =head1 NAME
 
-split_maltego_additional_fields.pl - "sub split_maltego_additional_fields"
+do_facebook_graphapi.pl - "do_facebook_graphapi test"
 
 =head1 VERSION
 
-This documentation refers "sub split_maltego_additional_fields" Alpha v$VERSION
+This documentation refers "do_facebook_graphapi test" Alpha v$VERSION
 
 =head1 CONFIGURATION
 
@@ -47,7 +52,7 @@ Set the value(s) marked as #CONFIGURATION above this POD
     
 =head1 USAGE
 
-split_maltego_additional_fields.pl
+do_facebook_graphapi.pl
 
 =head1 REQUIRED ARGUEMENTS
                 
@@ -55,7 +60,7 @@ split_maltego_additional_fields.pl
 
 =head1 DESCRIPTION
 
-Test to ensure that sub split_maltego_additional_fields is refactored.
+Test to ensure that do_facebook_graphapi.pl is refactored.
 
 =head1 DEPENDENCIES
 

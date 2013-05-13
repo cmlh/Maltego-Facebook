@@ -4,6 +4,7 @@
 # Please refer to the Plain Old Documentation (POD) at the end of this Perl Script for further information
 
 use strict;
+# use warnings;
 use JSON;
 use HTTP::Tiny;
 use Data::Dumper;
