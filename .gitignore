@@ -11,3 +11,5 @@ Icon
 # Files that might appear on external disk
 .Spotlight-V100
 .Trashes
+
+/Local_Transforms/Images/**/*.jpg
