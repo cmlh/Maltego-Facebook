@@ -3,3 +3,9 @@
 The latest stable release(s) are available from http://code.google.com/p/maltego/downloads
 
 Please refer to the https://github.com/cmlh/Maltego-Facebook/wiki for further information.
+
+=begin HTML
+
+<p><img src="https://d2weczhvl823v0.cloudfront.net/cmlh/maltego-facebook/trend.png"></p>
+
+=end HTML
